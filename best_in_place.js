@@ -25,8 +25,2112 @@
     (c) 2014 Jack Moore - http://www.jacklmoore.com/autosize
     license: http://www.opensource.org/licenses/mit-license.php
 */
+(function (global, factory) {
+	if (typeof define === "function" && define.amd) {
+		define(["module", "exports"], factory);
+	} else if (typeof exports !== "undefined") {
+		factory(module, exports);
+	} else {
+		var mod = {
+			exports: {}
+		};
+		factory(mod, mod.exports);
+		global.jqueryDatepicker = mod.exports;
+	}
+})(this, function (module, exports) {
+	"use strict";
 
-!function(e,t){if("function"==typeof define&&define.amd)define(["module","exports"],t);else if("undefined"!=typeof exports)t(module,exports);else{var a={exports:{}};t(a,a.exports),e.jqueryDatepicker=a.exports}}(this,function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=function(b){var r;function e(){this._curInst=null,this._keyEvent=!1,this._disabledInputs=[],this._datepickerShowing=!1,this._inDialog=!1,this._mainDivId="ui-datepicker-div",this._inlineClass="ui-datepicker-inline",this._appendClass="ui-datepicker-append",this._triggerClass="ui-datepicker-trigger",this._dialogClass="ui-datepicker-dialog",this._disableClass="ui-datepicker-disabled",this._unselectableClass="ui-datepicker-unselectable",this._currentClass="ui-datepicker-current-day",this._dayOverClass="ui-datepicker-days-cell-over",this.regional=[],this.regional[""]={closeText:"Done",prevText:"Prev",nextText:"Next",currentText:"Today",monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],monthNamesShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],dayNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],dayNamesShort:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],dayNamesMin:["Su","Mo","Tu","We","Th","Fr","Sa"],weekHeader:"Wk",dateFormat:"mm/dd/yy",firstDay:0,isRTL:!1,showMonthAfterYear:!1,yearSuffix:""},this._defaults={showOn:"focus",showAnim:"fadeIn",showOptions:{},defaultDate:null,appendText:"",buttonText:"...",buttonImage:"",buttonImageOnly:!1,hideIfNoPrevNext:!1,navigationAsDateFormat:!1,gotoCurrent:!1,changeMonth:!1,changeYear:!1,yearRange:"c-10:c+10",showOtherMonths:!1,selectOtherMonths:!1,showWeek:!1,calculateWeek:this.iso8601Week,shortYearCutoff:"+10",minDate:null,maxDate:null,duration:"fast",beforeShowDay:null,beforeShow:null,onSelect:null,onChangeMonthYear:null,onClose:null,numberOfMonths:1,showCurrentAtPos:0,stepMonths:1,stepBigMonths:12,altField:"",altFormat:"",constrainInput:!0,showButtonPanel:!1,autoSize:!1,disabled:!1},b.extend(this._defaults,this.regional[""]),this.regional.en=b.extend(!0,{},this.regional[""]),this.regional["en-US"]=b.extend(!0,{},this.regional.en),this.dpDiv=a(b("<div id='"+this._mainDivId+"' class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>"))}function a(e){var t="button, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-calendar td a";return e.on("mouseout",t,function(){b(this).removeClass("ui-state-hover"),-1!==this.className.indexOf("ui-datepicker-prev")&&b(this).removeClass("ui-datepicker-prev-hover"),-1!==this.className.indexOf("ui-datepicker-next")&&b(this).removeClass("ui-datepicker-next-hover")}).on("mouseover",t,n)}function n(){b.datepicker._isDisabledDatepicker(r.inline?r.dpDiv.parent()[0]:r.input[0])||(b(this).parents(".ui-datepicker-calendar").find("a").removeClass("ui-state-hover"),b(this).addClass("ui-state-hover"),-1!==this.className.indexOf("ui-datepicker-prev")&&b(this).addClass("ui-datepicker-prev-hover"),-1!==this.className.indexOf("ui-datepicker-next")&&b(this).addClass("ui-datepicker-next-hover"))}function h(e,t){for(var a in b.extend(e,t),t)null==t[a]&&(e[a]=t[a]);return e}return b.extend(b.ui,{datepicker:{version:"1.12.1"}}),b.extend(e.prototype,{markerClassName:"hasDatepicker",maxRows:4,_widgetDatepicker:function(){return this.dpDiv},setDefaults:function(e){return h(this._defaults,e||{}),this},_attachDatepicker:function(e,t){var a,i,s;i="div"===(a=e.nodeName.toLowerCase())||"span"===a,e.id||(this.uuid+=1,e.id="dp"+this.uuid),(s=this._newInst(b(e),i)).settings=b.extend({},t||{}),"input"===a?this._connectDatepicker(e,s):i&&this._inlineDatepicker(e,s)},_newInst:function(e,t){return{id:e[0].id.replace(/([^A-Za-z0-9_\-])/g,"\\\\$1"),input:e,selectedDay:0,selectedMonth:0,selectedYear:0,drawMonth:0,drawYear:0,inline:t,dpDiv:t?a(b("<div class='"+this._inlineClass+" ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>")):this.dpDiv}},_connectDatepicker:function(e,t){var a=b(e);t.append=b([]),t.trigger=b([]),a.hasClass(this.markerClassName)||(this._attachments(a,t),a.addClass(this.markerClassName).on("keydown",this._doKeyDown).on("keypress",this._doKeyPress).on("keyup",this._doKeyUp),this._autoSize(t),b.data(e,"datepicker",t),t.settings.disabled&&this._disableDatepicker(e))},_attachments:function(e,t){var a,i,s,r=this._get(t,"appendText"),n=this._get(t,"isRTL");t.append&&t.append.remove(),r&&(t.append=b("<span class='"+this._appendClass+"'>"+r+"</span>"),e[n?"before":"after"](t.append)),e.off("focus",this._showDatepicker),t.trigger&&t.trigger.remove(),"focus"!==(a=this._get(t,"showOn"))&&"both"!==a||e.on("focus",this._showDatepicker),"button"!==a&&"both"!==a||(i=this._get(t,"buttonText"),s=this._get(t,"buttonImage"),t.trigger=b(this._get(t,"buttonImageOnly")?b("<img/>").addClass(this._triggerClass).attr({src:s,alt:i,title:i}):b("<button type='button'></button>").addClass(this._triggerClass).html(s?b("<img/>").attr({src:s,alt:i,title:i}):i)),e[n?"before":"after"](t.trigger),t.trigger.on("click",function(){return b.datepicker._datepickerShowing&&b.datepicker._lastInput===e[0]?b.datepicker._hideDatepicker():(b.datepicker._datepickerShowing&&b.datepicker._lastInput!==e[0]&&b.datepicker._hideDatepicker(),b.datepicker._showDatepicker(e[0])),!1}))},_autoSize:function(e){if(this._get(e,"autoSize")&&!e.inline){var t,a,i,s,r=new Date(2009,11,20),n=this._get(e,"dateFormat");n.match(/[DM]/)&&(t=function(e){for(s=i=a=0;s<e.length;s++)e[s].length>a&&(a=e[s].length,i=s);return i},r.setMonth(t(this._get(e,n.match(/MM/)?"monthNames":"monthNamesShort"))),r.setDate(t(this._get(e,n.match(/DD/)?"dayNames":"dayNamesShort"))+20-r.getDay())),e.input.attr("size",this._formatDate(e,r).length)}},_inlineDatepicker:function(e,t){var a=b(e);a.hasClass(this.markerClassName)||(a.addClass(this.markerClassName).append(t.dpDiv),b.data(e,"datepicker",t),this._setDate(t,this._getDefaultDate(t),!0),this._updateDatepicker(t),this._updateAlternate(t),t.settings.disabled&&this._disableDatepicker(e),t.dpDiv.css("display","block"))},_dialogDatepicker:function(e,t,a,i,s){var r,n,d,o,c,l=this._dialogInst;return l||(this.uuid+=1,r="dp"+this.uuid,this._dialogInput=b("<input type='text' id='"+r+"' style='position: absolute; top: -100px; width: 0px;'/>"),this._dialogInput.on("keydown",this._doKeyDown),b("body").append(this._dialogInput),(l=this._dialogInst=this._newInst(this._dialogInput,!1)).settings={},b.data(this._dialogInput[0],"datepicker",l)),h(l.settings,i||{}),t=t&&t.constructor===Date?this._formatDate(l,t):t,this._dialogInput.val(t),this._pos=s?s.length?s:[s.pageX,s.pageY]:null,this._pos||(n=document.documentElement.clientWidth,d=document.documentElement.clientHeight,o=document.documentElement.scrollLeft||document.body.scrollLeft,c=document.documentElement.scrollTop||document.body.scrollTop,this._pos=[n/2-100+o,d/2-150+c]),this._dialogInput.css("left",this._pos[0]+20+"px").css("top",this._pos[1]+"px"),l.settings.onSelect=a,this._inDialog=!0,this.dpDiv.addClass(this._dialogClass),this._showDatepicker(this._dialogInput[0]),b.blockUI&&b.blockUI(this.dpDiv),b.data(this._dialogInput[0],"datepicker",l),this},_destroyDatepicker:function(e){var t,a=b(e),i=b.data(e,"datepicker");a.hasClass(this.markerClassName)&&(t=e.nodeName.toLowerCase(),b.removeData(e,"datepicker"),"input"===t?(i.append.remove(),i.trigger.remove(),a.removeClass(this.markerClassName).off("focus",this._showDatepicker).off("keydown",this._doKeyDown).off("keypress",this._doKeyPress).off("keyup",this._doKeyUp)):"div"!==t&&"span"!==t||a.removeClass(this.markerClassName).empty(),r===i&&(r=null))},_enableDatepicker:function(t){var e,a,i=b(t),s=b.data(t,"datepicker");i.hasClass(this.markerClassName)&&("input"===(e=t.nodeName.toLowerCase())?(t.disabled=!1,s.trigger.filter("button").each(function(){this.disabled=!1}).end().filter("img").css({opacity:"1.0",cursor:""})):"div"!==e&&"span"!==e||((a=i.children("."+this._inlineClass)).children().removeClass("ui-state-disabled"),a.find("select.ui-datepicker-month, select.ui-datepicker-year").prop("disabled",!1)),this._disabledInputs=b.map(this._disabledInputs,function(e){return e===t?null:e}))},_disableDatepicker:function(t){var e,a,i=b(t),s=b.data(t,"datepicker");i.hasClass(this.markerClassName)&&("input"===(e=t.nodeName.toLowerCase())?(t.disabled=!0,s.trigger.filter("button").each(function(){this.disabled=!0}).end().filter("img").css({opacity:"0.5",cursor:"default"})):"div"!==e&&"span"!==e||((a=i.children("."+this._inlineClass)).children().addClass("ui-state-disabled"),a.find("select.ui-datepicker-month, select.ui-datepicker-year").prop("disabled",!0)),this._disabledInputs=b.map(this._disabledInputs,function(e){return e===t?null:e}),this._disabledInputs[this._disabledInputs.length]=t)},_isDisabledDatepicker:function(e){if(!e)return!1;for(var t=0;t<this._disabledInputs.length;t++)if(this._disabledInputs[t]===e)return!0;return!1},_getInst:function(e){try{return b.data(e,"datepicker")}catch(e){throw"Missing instance data for this datepicker"}},_optionDatepicker:function(e,t,a){var i,s,r,n,d=this._getInst(e);if(2===arguments.length&&"string"==typeof t)return"defaults"===t?b.extend({},b.datepicker._defaults):d?"all"===t?b.extend({},d.settings):this._get(d,t):null;i=t||{},"string"==typeof t&&((i={})[t]=a),d&&(this._curInst===d&&this._hideDatepicker(),s=this._getDateDatepicker(e,!0),r=this._getMinMaxDate(d,"min"),n=this._getMinMaxDate(d,"max"),h(d.settings,i),null!==r&&void 0!==i.dateFormat&&void 0===i.minDate&&(d.settings.minDate=this._formatDate(d,r)),null!==n&&void 0!==i.dateFormat&&void 0===i.maxDate&&(d.settings.maxDate=this._formatDate(d,n)),"disabled"in i&&(i.disabled?this._disableDatepicker(e):this._enableDatepicker(e)),this._attachments(b(e),d),this._autoSize(d),this._setDate(d,s),this._updateAlternate(d),this._updateDatepicker(d))},_changeDatepicker:function(e,t,a){this._optionDatepicker(e,t,a)},_refreshDatepicker:function(e){var t=this._getInst(e);t&&this._updateDatepicker(t)},_setDateDatepicker:function(e,t){var a=this._getInst(e);a&&(this._setDate(a,t),this._updateDatepicker(a),this._updateAlternate(a))},_getDateDatepicker:function(e,t){var a=this._getInst(e);return a&&!a.inline&&this._setDateFromField(a,t),a?this._getDate(a):null},_doKeyDown:function(e){var t,a,i,s=b.datepicker._getInst(e.target),r=!0,n=s.dpDiv.is(".ui-datepicker-rtl");if(s._keyEvent=!0,b.datepicker._datepickerShowing)switch(e.keyCode){case 9:b.datepicker._hideDatepicker(),r=!1;break;case 13:return(i=b("td."+b.datepicker._dayOverClass+":not(."+b.datepicker._currentClass+")",s.dpDiv))[0]&&b.datepicker._selectDay(e.target,s.selectedMonth,s.selectedYear,i[0]),(t=b.datepicker._get(s,"onSelect"))?(a=b.datepicker._formatDate(s),t.apply(s.input?s.input[0]:null,[a,s])):b.datepicker._hideDatepicker(),!1;case 27:b.datepicker._hideDatepicker();break;case 33:b.datepicker._adjustDate(e.target,e.ctrlKey?-b.datepicker._get(s,"stepBigMonths"):-b.datepicker._get(s,"stepMonths"),"M");break;case 34:b.datepicker._adjustDate(e.target,e.ctrlKey?+b.datepicker._get(s,"stepBigMonths"):+b.datepicker._get(s,"stepMonths"),"M");break;case 35:(e.ctrlKey||e.metaKey)&&b.datepicker._clearDate(e.target),r=e.ctrlKey||e.metaKey;break;case 36:(e.ctrlKey||e.metaKey)&&b.datepicker._gotoToday(e.target),r=e.ctrlKey||e.metaKey;break;case 37:(e.ctrlKey||e.metaKey)&&b.datepicker._adjustDate(e.target,n?1:-1,"D"),r=e.ctrlKey||e.metaKey,e.originalEvent.altKey&&b.datepicker._adjustDate(e.target,e.ctrlKey?-b.datepicker._get(s,"stepBigMonths"):-b.datepicker._get(s,"stepMonths"),"M");break;case 38:(e.ctrlKey||e.metaKey)&&b.datepicker._adjustDate(e.target,-7,"D"),r=e.ctrlKey||e.metaKey;break;case 39:(e.ctrlKey||e.metaKey)&&b.datepicker._adjustDate(e.target,n?-1:1,"D"),r=e.ctrlKey||e.metaKey,e.originalEvent.altKey&&b.datepicker._adjustDate(e.target,e.ctrlKey?+b.datepicker._get(s,"stepBigMonths"):+b.datepicker._get(s,"stepMonths"),"M");break;case 40:(e.ctrlKey||e.metaKey)&&b.datepicker._adjustDate(e.target,7,"D"),r=e.ctrlKey||e.metaKey;break;default:r=!1}else 36===e.keyCode&&e.ctrlKey?b.datepicker._showDatepicker(this):r=!1;r&&(e.preventDefault(),e.stopPropagation())},_doKeyPress:function(e){var t,a,i=b.datepicker._getInst(e.target);if(b.datepicker._get(i,"constrainInput"))return t=b.datepicker._possibleChars(b.datepicker._get(i,"dateFormat")),a=String.fromCharCode(null==e.charCode?e.keyCode:e.charCode),e.ctrlKey||e.metaKey||a<" "||!t||-1<t.indexOf(a)},_doKeyUp:function(e){var t=b.datepicker._getInst(e.target);if(t.input.val()!==t.lastVal)try{b.datepicker.parseDate(b.datepicker._get(t,"dateFormat"),t.input?t.input.val():null,b.datepicker._getFormatConfig(t))&&(b.datepicker._setDateFromField(t),b.datepicker._updateAlternate(t),b.datepicker._updateDatepicker(t))}catch(e){}return!0},_showDatepicker:function(e){var t,a,i,s,r,n,d;("input"!==(e=e.target||e).nodeName.toLowerCase()&&(e=b("input",e.parentNode)[0]),b.datepicker._isDisabledDatepicker(e)||b.datepicker._lastInput===e)||(t=b.datepicker._getInst(e),b.datepicker._curInst&&b.datepicker._curInst!==t&&(b.datepicker._curInst.dpDiv.stop(!0,!0),t&&b.datepicker._datepickerShowing&&b.datepicker._hideDatepicker(b.datepicker._curInst.input[0])),!1!==(i=(a=b.datepicker._get(t,"beforeShow"))?a.apply(e,[e,t]):{})&&(h(t.settings,i),t.lastVal=null,b.datepicker._lastInput=e,b.datepicker._setDateFromField(t),b.datepicker._inDialog&&(e.value=""),b.datepicker._pos||(b.datepicker._pos=b.datepicker._findPos(e),b.datepicker._pos[1]+=e.offsetHeight),s=!1,b(e).parents().each(function(){return!(s|="fixed"===b(this).css("position"))}),r={left:b.datepicker._pos[0],top:b.datepicker._pos[1]},b.datepicker._pos=null,t.dpDiv.empty(),t.dpDiv.css({position:"absolute",display:"block",top:"-1000px"}),b.datepicker._updateDatepicker(t),r=b.datepicker._checkOffset(t,r,s),t.dpDiv.css({position:b.datepicker._inDialog&&b.blockUI?"static":s?"fixed":"absolute",display:"none",left:r.left+"px",top:r.top+"px"}),t.inline||(n=b.datepicker._get(t,"showAnim"),d=b.datepicker._get(t,"duration"),t.dpDiv.css("z-index",function(e){for(var t,a;e.length&&e[0]!==document;){if(("absolute"===(t=e.css("position"))||"relative"===t||"fixed"===t)&&(a=parseInt(e.css("zIndex"),10),!isNaN(a)&&0!==a))return a;e=e.parent()}return 0}(b(e))+1),b.datepicker._datepickerShowing=!0,b.effects&&b.effects.effect[n]?t.dpDiv.show(n,b.datepicker._get(t,"showOptions"),d):t.dpDiv[n||"show"](n?d:null),b.datepicker._shouldFocusInput(t)&&t.input.trigger("focus"),b.datepicker._curInst=t)))},_updateDatepicker:function(e){this.maxRows=4,(r=e).dpDiv.empty().append(this._generateHTML(e)),this._attachHandlers(e);var t,a=this._getNumberOfMonths(e),i=a[1],s=e.dpDiv.find("."+this._dayOverClass+" a");0<s.length&&n.apply(s.get(0)),e.dpDiv.removeClass("ui-datepicker-multi-2 ui-datepicker-multi-3 ui-datepicker-multi-4").width(""),1<i&&e.dpDiv.addClass("ui-datepicker-multi-"+i).css("width",17*i+"em"),e.dpDiv[(1!==a[0]||1!==a[1]?"add":"remove")+"Class"]("ui-datepicker-multi"),e.dpDiv[(this._get(e,"isRTL")?"add":"remove")+"Class"]("ui-datepicker-rtl"),e===b.datepicker._curInst&&b.datepicker._datepickerShowing&&b.datepicker._shouldFocusInput(e)&&e.input.trigger("focus"),e.yearshtml&&(t=e.yearshtml,setTimeout(function(){t===e.yearshtml&&e.yearshtml&&e.dpDiv.find("select.ui-datepicker-year:first").replaceWith(e.yearshtml),t=e.yearshtml=null},0))},_shouldFocusInput:function(e){return e.input&&e.input.is(":visible")&&!e.input.is(":disabled")&&!e.input.is(":focus")},_checkOffset:function(e,t,a){var i=e.dpDiv.outerWidth(),s=e.dpDiv.outerHeight(),r=e.input?e.input.outerWidth():0,n=e.input?e.input.outerHeight():0,d=document.documentElement.clientWidth+(a?0:b(document).scrollLeft()),o=document.documentElement.clientHeight+(a?0:b(document).scrollTop());return t.left-=this._get(e,"isRTL")?i-r:0,t.left-=a&&t.left===e.input.offset().left?b(document).scrollLeft():0,t.top-=a&&t.top===e.input.offset().top+n?b(document).scrollTop():0,t.left-=Math.min(t.left,t.left+i>d&&i<d?Math.abs(t.left+i-d):0),t.top-=Math.min(t.top,t.top+s>o&&s<o?Math.abs(s+n):0),t},_findPos:function(e){for(var t,a=this._getInst(e),i=this._get(a,"isRTL");e&&("hidden"===e.type||1!==e.nodeType||b.expr.filters.hidden(e));)e=e[i?"previousSibling":"nextSibling"];return[(t=b(e).offset()).left,t.top]},_hideDatepicker:function(e){var t,a,i,s,r=this._curInst;!r||e&&r!==b.data(e,"datepicker")||this._datepickerShowing&&(t=this._get(r,"showAnim"),a=this._get(r,"duration"),i=function(){b.datepicker._tidyDialog(r)},b.effects&&(b.effects.effect[t]||b.effects[t])?r.dpDiv.hide(t,b.datepicker._get(r,"showOptions"),a,i):r.dpDiv["slideDown"===t?"slideUp":"fadeIn"===t?"fadeOut":"hide"](t?a:null,i),t||i(),this._datepickerShowing=!1,(s=this._get(r,"onClose"))&&s.apply(r.input?r.input[0]:null,[r.input?r.input.val():"",r]),this._lastInput=null,this._inDialog&&(this._dialogInput.css({position:"absolute",left:"0",top:"-100px"}),b.blockUI&&(b.unblockUI(),b("body").append(this.dpDiv))),this._inDialog=!1)},_tidyDialog:function(e){e.dpDiv.removeClass(this._dialogClass).off(".ui-datepicker-calendar")},_checkExternalClick:function(e){if(b.datepicker._curInst){var t=b(e.target),a=b.datepicker._getInst(t[0]);(t[0].id===b.datepicker._mainDivId||0!==t.parents("#"+b.datepicker._mainDivId).length||t.hasClass(b.datepicker.markerClassName)||t.closest("."+b.datepicker._triggerClass).length||!b.datepicker._datepickerShowing||b.datepicker._inDialog&&b.blockUI)&&(!t.hasClass(b.datepicker.markerClassName)||b.datepicker._curInst===a)||b.datepicker._hideDatepicker()}},_adjustDate:function(e,t,a){var i=b(e),s=this._getInst(i[0]);this._isDisabledDatepicker(i[0])||(this._adjustInstDate(s,t,a),this._updateDatepicker(s))},_gotoToday:function(e){var t,a=b(e),i=this._getInst(a[0]);this._get(i,"gotoCurrent")&&i.currentDay?(i.selectedDay=i.currentDay,i.drawMonth=i.selectedMonth=i.currentMonth,i.drawYear=i.selectedYear=i.currentYear):(t=new Date,i.selectedDay=t.getDate(),i.drawMonth=i.selectedMonth=t.getMonth(),i.drawYear=i.selectedYear=t.getFullYear()),this._notifyChange(i),this._adjustDate(a)},_selectMonthYear:function(e,t,a){var i=b(e),s=this._getInst(i[0]);s["selected"+("M"===a?"Month":"Year")]=s["draw"+("M"===a?"Month":"Year")]=parseInt(t.options[t.selectedIndex].value,10),this._notifyChange(s),this._adjustDate(i)},_selectDay:function(e,t,a,i){var s,r=b(e);b(i).hasClass(this._unselectableClass)||this._isDisabledDatepicker(r[0])||((s=this._getInst(r[0])).selectedDay=s.currentDay=b("a",i).html(),s.selectedMonth=s.currentMonth=t,s.selectedYear=s.currentYear=a,this._selectDate(e,this._formatDate(s,s.currentDay,s.currentMonth,s.currentYear)))},_clearDate:function(e){var t=b(e);this._selectDate(t,"")},_selectDate:function(e,t){var a,i=b(e),s=this._getInst(i[0]);t=null!=t?t:this._formatDate(s),s.input&&s.input.val(t),this._updateAlternate(s),(a=this._get(s,"onSelect"))?a.apply(s.input?s.input[0]:null,[t,s]):s.input&&s.input.trigger("change"),s.inline?this._updateDatepicker(s):(this._hideDatepicker(),this._lastInput=s.input[0],"object"!=typeof s.input[0]&&s.input.trigger("focus"),this._lastInput=null)},_updateAlternate:function(e){var t,a,i,s=this._get(e,"altField");s&&(t=this._get(e,"altFormat")||this._get(e,"dateFormat"),a=this._getDate(e),i=this.formatDate(t,a,this._getFormatConfig(e)),b(s).val(i))},noWeekends:function(e){var t=e.getDay();return[0<t&&t<6,""]},iso8601Week:function(e){var t,a=new Date(e.getTime());return a.setDate(a.getDate()+4-(a.getDay()||7)),t=a.getTime(),a.setMonth(0),a.setDate(1),Math.floor(Math.round((t-a)/864e5)/7)+1},parseDate:function(a,r,e){if(null==a||null==r)throw"Invalid arguments";if(""===(r="object"==typeof r?r.toString():r+""))return null;var i,t,s,n,d=0,o=(e?e.shortYearCutoff:null)||this._defaults.shortYearCutoff,c="string"!=typeof o?o:(new Date).getFullYear()%100+parseInt(o,10),l=(e?e.dayNamesShort:null)||this._defaults.dayNamesShort,h=(e?e.dayNames:null)||this._defaults.dayNames,u=(e?e.monthNamesShort:null)||this._defaults.monthNamesShort,p=(e?e.monthNames:null)||this._defaults.monthNames,g=-1,_=-1,f=-1,k=-1,D=!1,m=function(e){var t=i+1<a.length&&a.charAt(i+1)===e;return t&&i++,t},y=function(e){var t=m(e),a="@"===e?14:"!"===e?20:"y"===e&&t?4:"o"===e?3:2,i=new RegExp("^\\d{"+("y"===e?a:1)+","+a+"}"),s=r.substring(d).match(i);if(!s)throw"Missing number at position "+d;return d+=s[0].length,parseInt(s[0],10)},v=function(e,t,a){var i=-1,s=b.map(m(e)?a:t,function(e,t){return[[t,e]]}).sort(function(e,t){return-(e[1].length-t[1].length)});if(b.each(s,function(e,t){var a=t[1];if(r.substr(d,a.length).toLowerCase()===a.toLowerCase())return i=t[0],d+=a.length,!1}),-1!==i)return i+1;throw"Unknown name at position "+d},M=function(){if(r.charAt(d)!==a.charAt(i))throw"Unexpected literal at position "+d;d++};for(i=0;i<a.length;i++)if(D)"'"!==a.charAt(i)||m("'")?M():D=!1;else switch(a.charAt(i)){case"d":f=y("d");break;case"D":v("D",l,h);break;case"o":k=y("o");break;case"m":_=y("m");break;case"M":_=v("M",u,p);break;case"y":g=y("y");break;case"@":g=(n=new Date(y("@"))).getFullYear(),_=n.getMonth()+1,f=n.getDate();break;case"!":g=(n=new Date((y("!")-this._ticksTo1970)/1e4)).getFullYear(),_=n.getMonth()+1,f=n.getDate();break;case"'":m("'")?M():D=!0;break;default:M()}if(d<r.length&&(s=r.substr(d),!/^\s+/.test(s)))throw"Extra/unparsed characters found in date: "+s;if(-1===g?g=(new Date).getFullYear():g<100&&(g+=(new Date).getFullYear()-(new Date).getFullYear()%100+(g<=c?0:-100)),-1<k)for(_=1,f=k;;){if(f<=(t=this._getDaysInMonth(g,_-1)))break;_++,f-=t}if((n=this._daylightSavingAdjust(new Date(g,_-1,f))).getFullYear()!==g||n.getMonth()+1!==_||n.getDate()!==f)throw"Invalid date";return n},ATOM:"yy-mm-dd",COOKIE:"D, dd M yy",ISO_8601:"yy-mm-dd",RFC_822:"D, d M y",RFC_850:"DD, dd-M-y",RFC_1036:"D, d M y",RFC_1123:"D, d M yy",RFC_2822:"D, d M yy",RSS:"D, d M y",TICKS:"!",TIMESTAMP:"@",W3C:"yy-mm-dd",_ticksTo1970:24*(718685+Math.floor(492.5)-Math.floor(19.7)+Math.floor(4.925))*60*60*1e7,formatDate:function(a,e,t){if(!e)return"";var i,s=(t?t.dayNamesShort:null)||this._defaults.dayNamesShort,r=(t?t.dayNames:null)||this._defaults.dayNames,n=(t?t.monthNamesShort:null)||this._defaults.monthNamesShort,d=(t?t.monthNames:null)||this._defaults.monthNames,o=function(e){var t=i+1<a.length&&a.charAt(i+1)===e;return t&&i++,t},c=function(e,t,a){var i=""+t;if(o(e))for(;i.length<a;)i="0"+i;return i},l=function(e,t,a,i){return o(e)?i[t]:a[t]},h="",u=!1;if(e)for(i=0;i<a.length;i++)if(u)"'"!==a.charAt(i)||o("'")?h+=a.charAt(i):u=!1;else switch(a.charAt(i)){case"d":h+=c("d",e.getDate(),2);break;case"D":h+=l("D",e.getDay(),s,r);break;case"o":h+=c("o",Math.round((new Date(e.getFullYear(),e.getMonth(),e.getDate()).getTime()-new Date(e.getFullYear(),0,0).getTime())/864e5),3);break;case"m":h+=c("m",e.getMonth()+1,2);break;case"M":h+=l("M",e.getMonth(),n,d);break;case"y":h+=o("y")?e.getFullYear():(e.getFullYear()%100<10?"0":"")+e.getFullYear()%100;break;case"@":h+=e.getTime();break;case"!":h+=1e4*e.getTime()+this._ticksTo1970;break;case"'":o("'")?h+="'":u=!0;break;default:h+=a.charAt(i)}return h},_possibleChars:function(a){var i,e="",t=!1,s=function(e){var t=i+1<a.length&&a.charAt(i+1)===e;return t&&i++,t};for(i=0;i<a.length;i++)if(t)"'"!==a.charAt(i)||s("'")?e+=a.charAt(i):t=!1;else switch(a.charAt(i)){case"d":case"m":case"y":case"@":e+="0123456789";break;case"D":case"M":return null;case"'":s("'")?e+="'":t=!0;break;default:e+=a.charAt(i)}return e},_get:function(e,t){return void 0!==e.settings[t]?e.settings[t]:this._defaults[t]},_setDateFromField:function(e,t){if(e.input.val()!==e.lastVal){var a=this._get(e,"dateFormat"),i=e.lastVal=e.input?e.input.val():null,s=this._getDefaultDate(e),r=s,n=this._getFormatConfig(e);try{r=this.parseDate(a,i,n)||s}catch(e){i=t?"":i}e.selectedDay=r.getDate(),e.drawMonth=e.selectedMonth=r.getMonth(),e.drawYear=e.selectedYear=r.getFullYear(),e.currentDay=i?r.getDate():0,e.currentMonth=i?r.getMonth():0,e.currentYear=i?r.getFullYear():0,this._adjustInstDate(e)}},_getDefaultDate:function(e){return this._restrictMinMax(e,this._determineDate(e,this._get(e,"defaultDate"),new Date))},_determineDate:function(d,e,t){var a,i,s=null==e||""===e?t:"string"==typeof e?function(e){try{return b.datepicker.parseDate(b.datepicker._get(d,"dateFormat"),e,b.datepicker._getFormatConfig(d))}catch(e){}for(var t=(e.toLowerCase().match(/^c/)?b.datepicker._getDate(d):null)||new Date,a=t.getFullYear(),i=t.getMonth(),s=t.getDate(),r=/([+\-]?[0-9]+)\s*(d|D|w|W|m|M|y|Y)?/g,n=r.exec(e);n;){switch(n[2]||"d"){case"d":case"D":s+=parseInt(n[1],10);break;case"w":case"W":s+=7*parseInt(n[1],10);break;case"m":case"M":i+=parseInt(n[1],10),s=Math.min(s,b.datepicker._getDaysInMonth(a,i));break;case"y":case"Y":a+=parseInt(n[1],10),s=Math.min(s,b.datepicker._getDaysInMonth(a,i))}n=r.exec(e)}return new Date(a,i,s)}(e):"number"==typeof e?isNaN(e)?t:(a=e,(i=new Date).setDate(i.getDate()+a),i):new Date(e.getTime());return(s=s&&"Invalid Date"===s.toString()?t:s)&&(s.setHours(0),s.setMinutes(0),s.setSeconds(0),s.setMilliseconds(0)),this._daylightSavingAdjust(s)},_daylightSavingAdjust:function(e){return e?(e.setHours(12<e.getHours()?e.getHours()+2:0),e):null},_setDate:function(e,t,a){var i=!t,s=e.selectedMonth,r=e.selectedYear,n=this._restrictMinMax(e,this._determineDate(e,t,new Date));e.selectedDay=e.currentDay=n.getDate(),e.drawMonth=e.selectedMonth=e.currentMonth=n.getMonth(),e.drawYear=e.selectedYear=e.currentYear=n.getFullYear(),s===e.selectedMonth&&r===e.selectedYear||a||this._notifyChange(e),this._adjustInstDate(e),e.input&&e.input.val(i?"":this._formatDate(e))},_getDate:function(e){return!e.currentYear||e.input&&""===e.input.val()?null:this._daylightSavingAdjust(new Date(e.currentYear,e.currentMonth,e.currentDay))},_attachHandlers:function(e){var t=this._get(e,"stepMonths"),a="#"+e.id.replace(/\\\\/g,"\\");e.dpDiv.find("[data-handler]").map(function(){var e={prev:function(){b.datepicker._adjustDate(a,-t,"M")},next:function(){b.datepicker._adjustDate(a,+t,"M")},hide:function(){b.datepicker._hideDatepicker()},today:function(){b.datepicker._gotoToday(a)},selectDay:function(){return b.datepicker._selectDay(a,+this.getAttribute("data-month"),+this.getAttribute("data-year"),this),!1},selectMonth:function(){return b.datepicker._selectMonthYear(a,this,"M"),!1},selectYear:function(){return b.datepicker._selectMonthYear(a,this,"Y"),!1}};b(this).on(this.getAttribute("data-event"),e[this.getAttribute("data-handler")])})},_generateHTML:function(e){var t,a,i,s,r,n,d,o,c,l,h,u,p,g,_,f,k,D,m,y,v,M,b,w,C,I,x,Y,S,F,N,T,A,K,j,O,R,L,W,E=new Date,H=this._daylightSavingAdjust(new Date(E.getFullYear(),E.getMonth(),E.getDate())),P=this._get(e,"isRTL"),U=this._get(e,"showButtonPanel"),z=this._get(e,"hideIfNoPrevNext"),B=this._get(e,"navigationAsDateFormat"),J=this._getNumberOfMonths(e),V=this._get(e,"showCurrentAtPos"),q=this._get(e,"stepMonths"),X=1!==J[0]||1!==J[1],Z=this._daylightSavingAdjust(e.currentDay?new Date(e.currentYear,e.currentMonth,e.currentDay):new Date(9999,9,9)),$=this._getMinMaxDate(e,"min"),G=this._getMinMaxDate(e,"max"),Q=e.drawMonth-V,ee=e.drawYear;if(Q<0&&(Q+=12,ee--),G)for(t=this._daylightSavingAdjust(new Date(G.getFullYear(),G.getMonth()-J[0]*J[1]+1,G.getDate())),t=$&&t<$?$:t;this._daylightSavingAdjust(new Date(ee,Q,1))>t;)--Q<0&&(Q=11,ee--);for(e.drawMonth=Q,e.drawYear=ee,a=this._get(e,"prevText"),a=B?this.formatDate(a,this._daylightSavingAdjust(new Date(ee,Q-q,1)),this._getFormatConfig(e)):a,i=this._canAdjustMonth(e,-1,ee,Q)?"<a class='ui-datepicker-prev ui-corner-all' data-handler='prev' data-event='click' title='"+a+"'><span class='ui-icon ui-icon-circle-triangle-"+(P?"e":"w")+"'>"+a+"</span></a>":z?"":"<a class='ui-datepicker-prev ui-corner-all ui-state-disabled' title='"+a+"'><span class='ui-icon ui-icon-circle-triangle-"+(P?"e":"w")+"'>"+a+"</span></a>",s=this._get(e,"nextText"),s=B?this.formatDate(s,this._daylightSavingAdjust(new Date(ee,Q+q,1)),this._getFormatConfig(e)):s,r=this._canAdjustMonth(e,1,ee,Q)?"<a class='ui-datepicker-next ui-corner-all' data-handler='next' data-event='click' title='"+s+"'><span class='ui-icon ui-icon-circle-triangle-"+(P?"w":"e")+"'>"+s+"</span></a>":z?"":"<a class='ui-datepicker-next ui-corner-all ui-state-disabled' title='"+s+"'><span class='ui-icon ui-icon-circle-triangle-"+(P?"w":"e")+"'>"+s+"</span></a>",n=this._get(e,"currentText"),d=this._get(e,"gotoCurrent")&&e.currentDay?Z:H,n=B?this.formatDate(n,d,this._getFormatConfig(e)):n,o=e.inline?"":"<button type='button' class='ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all' data-handler='hide' data-event='click'>"+this._get(e,"closeText")+"</button>",c=U?"<div class='ui-datepicker-buttonpane ui-widget-content'>"+(P?o:"")+(this._isInRange(e,d)?"<button type='button' class='ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all' data-handler='today' data-event='click'>"+n+"</button>":"")+(P?"":o)+"</div>":"",l=parseInt(this._get(e,"firstDay"),10),l=isNaN(l)?0:l,h=this._get(e,"showWeek"),u=this._get(e,"dayNames"),p=this._get(e,"dayNamesMin"),g=this._get(e,"monthNames"),_=this._get(e,"monthNamesShort"),f=this._get(e,"beforeShowDay"),k=this._get(e,"showOtherMonths"),D=this._get(e,"selectOtherMonths"),m=this._getDefaultDate(e),y="",M=0;M<J[0];M++){for(b="",this.maxRows=4,w=0;w<J[1];w++){if(C=this._daylightSavingAdjust(new Date(ee,Q,e.selectedDay)),I=" ui-corner-all",x="",X){if(x+="<div class='ui-datepicker-group",1<J[1])switch(w){case 0:x+=" ui-datepicker-group-first",I=" ui-corner-"+(P?"right":"left");break;case J[1]-1:x+=" ui-datepicker-group-last",I=" ui-corner-"+(P?"left":"right");break;default:x+=" ui-datepicker-group-middle",I=""}x+="'>"}for(x+="<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix"+I+"'>"+(/all|left/.test(I)&&0===M?P?r:i:"")+(/all|right/.test(I)&&0===M?P?i:r:"")+this._generateMonthYearHeader(e,Q,ee,$,G,0<M||0<w,g,_)+"</div><table class='ui-datepicker-calendar'><thead><tr>",Y=h?"<th class='ui-datepicker-week-col'>"+this._get(e,"weekHeader")+"</th>":"",v=0;v<7;v++)Y+="<th scope='col'"+(5<=(v+l+6)%7?" class='ui-datepicker-week-end'":"")+"><span title='"+u[S=(v+l)%7]+"'>"+p[S]+"</span></th>";for(x+=Y+"</tr></thead><tbody>",F=this._getDaysInMonth(ee,Q),ee===e.selectedYear&&Q===e.selectedMonth&&(e.selectedDay=Math.min(e.selectedDay,F)),N=(this._getFirstDayOfMonth(ee,Q)-l+7)%7,T=Math.ceil((N+F)/7),A=X&&this.maxRows>T?this.maxRows:T,this.maxRows=A,K=this._daylightSavingAdjust(new Date(ee,Q,1-N)),j=0;j<A;j++){for(x+="<tr>",O=h?"<td class='ui-datepicker-week-col'>"+this._get(e,"calculateWeek")(K)+"</td>":"",v=0;v<7;v++)R=f?f.apply(e.input?e.input[0]:null,[K]):[!0,""],W=(L=K.getMonth()!==Q)&&!D||!R[0]||$&&K<$||G&&G<K,O+="<td class='"+(5<=(v+l+6)%7?" ui-datepicker-week-end":"")+(L?" ui-datepicker-other-month":"")+(K.getTime()===C.getTime()&&Q===e.selectedMonth&&e._keyEvent||m.getTime()===K.getTime()&&m.getTime()===C.getTime()?" "+this._dayOverClass:"")+(W?" "+this._unselectableClass+" ui-state-disabled":"")+(L&&!k?"":" "+R[1]+(K.getTime()===Z.getTime()?" "+this._currentClass:"")+(K.getTime()===H.getTime()?" ui-datepicker-today":""))+"'"+(L&&!k||!R[2]?"":" title='"+R[2].replace(/'/g,"&#39;")+"'")+(W?"":" data-handler='selectDay' data-event='click' data-month='"+K.getMonth()+"' data-year='"+K.getFullYear()+"'")+">"+(L&&!k?"&#xa0;":W?"<span class='ui-state-default'>"+K.getDate()+"</span>":"<a class='ui-state-default"+(K.getTime()===H.getTime()?" ui-state-highlight":"")+(K.getTime()===Z.getTime()?" ui-state-active":"")+(L?" ui-priority-secondary":"")+"' href='#'>"+K.getDate()+"</a>")+"</td>",K.setDate(K.getDate()+1),K=this._daylightSavingAdjust(K);x+=O+"</tr>"}11<++Q&&(Q=0,ee++),b+=x+="</tbody></table>"+(X?"</div>"+(0<J[0]&&w===J[1]-1?"<div class='ui-datepicker-row-break'></div>":""):"")}y+=b}return y+=c,e._keyEvent=!1,y},_generateMonthYearHeader:function(e,t,a,i,s,r,n,d){var o,c,l,h,u,p,g,_,f=this._get(e,"changeMonth"),k=this._get(e,"changeYear"),D=this._get(e,"showMonthAfterYear"),m="<div class='ui-datepicker-title'>",y="";if(r||!f)y+="<span class='ui-datepicker-month'>"+n[t]+"</span>";else{for(o=i&&i.getFullYear()===a,c=s&&s.getFullYear()===a,y+="<select class='ui-datepicker-month' data-handler='selectMonth' data-event='change'>",l=0;l<12;l++)(!o||l>=i.getMonth())&&(!c||l<=s.getMonth())&&(y+="<option value='"+l+"'"+(l===t?" selected='selected'":"")+">"+d[l]+"</option>");y+="</select>"}if(D||(m+=y+(!r&&f&&k?"":"&#xa0;")),!e.yearshtml)if(e.yearshtml="",r||!k)m+="<span class='ui-datepicker-year'>"+a+"</span>";else{for(h=this._get(e,"yearRange").split(":"),u=(new Date).getFullYear(),g=(p=function(e){var t=e.match(/c[+\-].*/)?a+parseInt(e.substring(1),10):e.match(/[+\-].*/)?u+parseInt(e,10):parseInt(e,10);return isNaN(t)?u:t})(h[0]),_=Math.max(g,p(h[1]||"")),g=i?Math.max(g,i.getFullYear()):g,_=s?Math.min(_,s.getFullYear()):_,e.yearshtml+="<select class='ui-datepicker-year' data-handler='selectYear' data-event='change'>";g<=_;g++)e.yearshtml+="<option value='"+g+"'"+(g===a?" selected='selected'":"")+">"+g+"</option>";e.yearshtml+="</select>",m+=e.yearshtml,e.yearshtml=null}return m+=this._get(e,"yearSuffix"),D&&(m+=(!r&&f&&k?"":"&#xa0;")+y),m+="</div>"},_adjustInstDate:function(e,t,a){var i=e.selectedYear+("Y"===a?t:0),s=e.selectedMonth+("M"===a?t:0),r=Math.min(e.selectedDay,this._getDaysInMonth(i,s))+("D"===a?t:0),n=this._restrictMinMax(e,this._daylightSavingAdjust(new Date(i,s,r)));e.selectedDay=n.getDate(),e.drawMonth=e.selectedMonth=n.getMonth(),e.drawYear=e.selectedYear=n.getFullYear(),"M"!==a&&"Y"!==a||this._notifyChange(e)},_restrictMinMax:function(e,t){var a=this._getMinMaxDate(e,"min"),i=this._getMinMaxDate(e,"max"),s=a&&t<a?a:t;return i&&i<s?i:s},_notifyChange:function(e){var t=this._get(e,"onChangeMonthYear");t&&t.apply(e.input?e.input[0]:null,[e.selectedYear,e.selectedMonth+1,e])},_getNumberOfMonths:function(e){var t=this._get(e,"numberOfMonths");return null==t?[1,1]:"number"==typeof t?[1,t]:t},_getMinMaxDate:function(e,t){return this._determineDate(e,this._get(e,t+"Date"),null)},_getDaysInMonth:function(e,t){return 32-this._daylightSavingAdjust(new Date(e,t,32)).getDate()},_getFirstDayOfMonth:function(e,t){return new Date(e,t,1).getDay()},_canAdjustMonth:function(e,t,a,i){var s=this._getNumberOfMonths(e),r=this._daylightSavingAdjust(new Date(a,i+(t<0?t:s[0]*s[1]),1));return t<0&&r.setDate(this._getDaysInMonth(r.getFullYear(),r.getMonth())),this._isInRange(e,r)},_isInRange:function(e,t){var a,i,s=this._getMinMaxDate(e,"min"),r=this._getMinMaxDate(e,"max"),n=null,d=null,o=this._get(e,"yearRange");return o&&(a=o.split(":"),i=(new Date).getFullYear(),n=parseInt(a[0],10),d=parseInt(a[1],10),a[0].match(/[+\-].*/)&&(n+=i),a[1].match(/[+\-].*/)&&(d+=i)),(!s||t.getTime()>=s.getTime())&&(!r||t.getTime()<=r.getTime())&&(!n||t.getFullYear()>=n)&&(!d||t.getFullYear()<=d)},_getFormatConfig:function(e){var t=this._get(e,"shortYearCutoff");return{shortYearCutoff:t="string"!=typeof t?t:(new Date).getFullYear()%100+parseInt(t,10),dayNamesShort:this._get(e,"dayNamesShort"),dayNames:this._get(e,"dayNames"),monthNamesShort:this._get(e,"monthNamesShort"),monthNames:this._get(e,"monthNames")}},_formatDate:function(e,t,a,i){t||(e.currentDay=e.selectedDay,e.currentMonth=e.selectedMonth,e.currentYear=e.selectedYear);var s=t?"object"==typeof t?t:this._daylightSavingAdjust(new Date(i,a,t)):this._daylightSavingAdjust(new Date(e.currentYear,e.currentMonth,e.currentDay));return this.formatDate(this._get(e,"dateFormat"),s,this._getFormatConfig(e))}}),b.fn.datepicker=function(e){if(!this.length)return this;b.datepicker.initialized||(b(document).on("mousedown",b.datepicker._checkExternalClick),b.datepicker.initialized=!0),0===b("#"+b.datepicker._mainDivId).length&&b("body").append(b.datepicker.dpDiv);var t=Array.prototype.slice.call(arguments,1);return"string"!=typeof e||"isDisabled"!==e&&"getDate"!==e&&"widget"!==e?"option"===e&&2===arguments.length&&"string"==typeof arguments[1]?b.datepicker["_"+e+"Datepicker"].apply(b.datepicker,[this[0]].concat(t)):this.each(function(){"string"==typeof e?b.datepicker["_"+e+"Datepicker"].apply(b.datepicker,[this].concat(t)):b.datepicker._attachDatepicker(this,e)}):b.datepicker["_"+e+"Datepicker"].apply(b.datepicker,[this[0]].concat(t))},b.datepicker=new e,b.datepicker.initialized=!1,b.datepicker.uuid=(new Date).getTime(),b.datepicker.version="1.12.1",b.datepicker},e.exports=t.default});
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	exports.default = function ($) {
+
+		$.extend($.ui, { datepicker: { version: "1.12.1" } });
+
+		var datepicker_instActive;
+
+		function datepicker_getZindex(elem) {
+			var position, value;
+			while (elem.length && elem[0] !== document) {
+
+				// Ignore z-index if position is set to a value where z-index is ignored by the browser
+				// This makes behavior of this function consistent across browsers
+				// WebKit always returns auto if the element is positioned
+				position = elem.css("position");
+				if (position === "absolute" || position === "relative" || position === "fixed") {
+
+					// IE returns 0 when zIndex is not specified
+					// other browsers return a string
+					// we ignore the case of nested elements with an explicit value of 0
+					// <div style="z-index: -10;"><div style="z-index: 0;"></div></div>
+					value = parseInt(elem.css("zIndex"), 10);
+					if (!isNaN(value) && value !== 0) {
+						return value;
+					}
+				}
+				elem = elem.parent();
+			}
+
+			return 0;
+		}
+		/* Date picker manager.
+     Use the singleton instance of this class, $.datepicker, to interact with the date picker.
+     Settings for (groups of) date pickers are maintained in an instance object,
+     allowing multiple different settings on the same page. */
+
+		function Datepicker() {
+			this._curInst = null; // The current instance in use
+			this._keyEvent = false; // If the last event was a key event
+			this._disabledInputs = []; // List of date picker inputs that have been disabled
+			this._datepickerShowing = false; // True if the popup picker is showing , false if not
+			this._inDialog = false; // True if showing within a "dialog", false if not
+			this._mainDivId = "ui-datepicker-div"; // The ID of the main datepicker division
+			this._inlineClass = "ui-datepicker-inline"; // The name of the inline marker class
+			this._appendClass = "ui-datepicker-append"; // The name of the append marker class
+			this._triggerClass = "ui-datepicker-trigger"; // The name of the trigger marker class
+			this._dialogClass = "ui-datepicker-dialog"; // The name of the dialog marker class
+			this._disableClass = "ui-datepicker-disabled"; // The name of the disabled covering marker class
+			this._unselectableClass = "ui-datepicker-unselectable"; // The name of the unselectable cell marker class
+			this._currentClass = "ui-datepicker-current-day"; // The name of the current day marker class
+			this._dayOverClass = "ui-datepicker-days-cell-over"; // The name of the day hover marker class
+			this.regional = []; // Available regional settings, indexed by language code
+			this.regional[""] = { // Default regional settings
+				closeText: "Done", // Display text for close link
+				prevText: "Prev", // Display text for previous month link
+				nextText: "Next", // Display text for next month link
+				currentText: "Today", // Display text for current month link
+				monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], // Names of months for drop-down and formatting
+				monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], // For formatting
+				dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], // For formatting
+				dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], // For formatting
+				dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"], // Column headings for days starting at Sunday
+				weekHeader: "Wk", // Column header for week of the year
+				dateFormat: "mm/dd/yy", // See format options on parseDate
+				firstDay: 0, // The first day of the week, Sun = 0, Mon = 1, ...
+				isRTL: false, // True if right-to-left language, false if left-to-right
+				showMonthAfterYear: false, // True if the year select precedes month, false for month then year
+				yearSuffix: "" // Additional text to append to the year in the month headers
+			};
+			this._defaults = { // Global defaults for all the date picker instances
+				showOn: "focus", // "focus" for popup on focus,
+				// "button" for trigger button, or "both" for either
+				showAnim: "fadeIn", // Name of jQuery animation for popup
+				showOptions: {}, // Options for enhanced animations
+				defaultDate: null, // Used when field is blank: actual date,
+				// +/-number for offset from today, null for today
+				appendText: "", // Display text following the input box, e.g. showing the format
+				buttonText: "...", // Text for trigger button
+				buttonImage: "", // URL for trigger button image
+				buttonImageOnly: false, // True if the image appears alone, false if it appears on a button
+				hideIfNoPrevNext: false, // True to hide next/previous month links
+				// if not applicable, false to just disable them
+				navigationAsDateFormat: false, // True if date formatting applied to prev/today/next links
+				gotoCurrent: false, // True if today link goes back to current selection instead
+				changeMonth: false, // True if month can be selected directly, false if only prev/next
+				changeYear: false, // True if year can be selected directly, false if only prev/next
+				yearRange: "c-10:c+10", // Range of years to display in drop-down,
+				// either relative to today's year (-nn:+nn), relative to currently displayed year
+				// (c-nn:c+nn), absolute (nnnn:nnnn), or a combination of the above (nnnn:-n)
+				showOtherMonths: false, // True to show dates in other months, false to leave blank
+				selectOtherMonths: false, // True to allow selection of dates in other months, false for unselectable
+				showWeek: false, // True to show week of the year, false to not show it
+				calculateWeek: this.iso8601Week, // How to calculate the week of the year,
+				// takes a Date and returns the number of the week for it
+				shortYearCutoff: "+10", // Short year values < this are in the current century,
+				// > this are in the previous century,
+				// string value starting with "+" for current year + value
+				minDate: null, // The earliest selectable date, or null for no limit
+				maxDate: null, // The latest selectable date, or null for no limit
+				duration: "fast", // Duration of display/closure
+				beforeShowDay: null, // Function that takes a date and returns an array with
+				// [0] = true if selectable, false if not, [1] = custom CSS class name(s) or "",
+				// [2] = cell title (optional), e.g. $.datepicker.noWeekends
+				beforeShow: null, // Function that takes an input field and
+				// returns a set of custom settings for the date picker
+				onSelect: null, // Define a callback function when a date is selected
+				onChangeMonthYear: null, // Define a callback function when the month or year is changed
+				onClose: null, // Define a callback function when the datepicker is closed
+				numberOfMonths: 1, // Number of months to show at a time
+				showCurrentAtPos: 0, // The position in multipe months at which to show the current month (starting at 0)
+				stepMonths: 1, // Number of months to step back/forward
+				stepBigMonths: 12, // Number of months to step back/forward for the big links
+				altField: "", // Selector for an alternate field to store selected dates into
+				altFormat: "", // The date format to use for the alternate field
+				constrainInput: true, // The input is constrained by the current date format
+				showButtonPanel: false, // True to show button panel, false to not show it
+				autoSize: false, // True to size the input for the date format, false to leave as is
+				disabled: false // The initial disabled state
+			};
+			$.extend(this._defaults, this.regional[""]);
+			this.regional.en = $.extend(true, {}, this.regional[""]);
+			this.regional["en-US"] = $.extend(true, {}, this.regional.en);
+			this.dpDiv = datepicker_bindHover($("<div id='" + this._mainDivId + "' class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>"));
+		}
+
+		$.extend(Datepicker.prototype, {
+			/* Class name added to elements to indicate already configured with a date picker. */
+			markerClassName: "hasDatepicker",
+
+			//Keep track of the maximum number of rows displayed (see #7043)
+			maxRows: 4,
+
+			// TODO rename to "widget" when switching to widget factory
+			_widgetDatepicker: function () {
+				return this.dpDiv;
+			},
+
+			/* Override the default settings for all instances of the date picker.
+    * @param  settings  object - the new settings to use as defaults (anonymous object)
+    * @return the manager object
+    */
+			setDefaults: function (settings) {
+				datepicker_extendRemove(this._defaults, settings || {});
+				return this;
+			},
+
+			/* Attach the date picker to a jQuery selection.
+    * @param  target	element - the target input field or division or span
+    * @param  settings  object - the new settings to use for this date picker instance (anonymous)
+    */
+			_attachDatepicker: function (target, settings) {
+				var nodeName, inline, inst;
+				nodeName = target.nodeName.toLowerCase();
+				inline = nodeName === "div" || nodeName === "span";
+				if (!target.id) {
+					this.uuid += 1;
+					target.id = "dp" + this.uuid;
+				}
+				inst = this._newInst($(target), inline);
+				inst.settings = $.extend({}, settings || {});
+				if (nodeName === "input") {
+					this._connectDatepicker(target, inst);
+				} else if (inline) {
+					this._inlineDatepicker(target, inst);
+				}
+			},
+
+			/* Create a new instance object. */
+			_newInst: function (target, inline) {
+				var id = target[0].id.replace(/([^A-Za-z0-9_\-])/g, "\\\\$1"); // escape jQuery meta chars
+				return { id: id, input: target, // associated target
+					selectedDay: 0, selectedMonth: 0, selectedYear: 0, // current selection
+					drawMonth: 0, drawYear: 0, // month being drawn
+					inline: inline, // is datepicker inline or not
+					dpDiv: !inline ? this.dpDiv : // presentation div
+					datepicker_bindHover($("<div class='" + this._inlineClass + " ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'></div>")) };
+			},
+
+			/* Attach the date picker to an input field. */
+			_connectDatepicker: function (target, inst) {
+				var input = $(target);
+				inst.append = $([]);
+				inst.trigger = $([]);
+				if (input.hasClass(this.markerClassName)) {
+					return;
+				}
+				this._attachments(input, inst);
+				input.addClass(this.markerClassName).on("keydown", this._doKeyDown).on("keypress", this._doKeyPress).on("keyup", this._doKeyUp);
+				this._autoSize(inst);
+				$.data(target, "datepicker", inst);
+
+				//If disabled option is true, disable the datepicker once it has been attached to the input (see ticket #5665)
+				if (inst.settings.disabled) {
+					this._disableDatepicker(target);
+				}
+			},
+
+			/* Make attachments based on settings. */
+			_attachments: function (input, inst) {
+				var showOn,
+				    buttonText,
+				    buttonImage,
+				    appendText = this._get(inst, "appendText"),
+				    isRTL = this._get(inst, "isRTL");
+
+				if (inst.append) {
+					inst.append.remove();
+				}
+				if (appendText) {
+					inst.append = $("<span class='" + this._appendClass + "'>" + appendText + "</span>");
+					input[isRTL ? "before" : "after"](inst.append);
+				}
+
+				input.off("focus", this._showDatepicker);
+
+				if (inst.trigger) {
+					inst.trigger.remove();
+				}
+
+				showOn = this._get(inst, "showOn");
+				if (showOn === "focus" || showOn === "both") {
+					// pop-up date picker when in the marked field
+					input.on("focus", this._showDatepicker);
+				}
+				if (showOn === "button" || showOn === "both") {
+					// pop-up date picker when button clicked
+					buttonText = this._get(inst, "buttonText");
+					buttonImage = this._get(inst, "buttonImage");
+					inst.trigger = $(this._get(inst, "buttonImageOnly") ? $("<img/>").addClass(this._triggerClass).attr({ src: buttonImage, alt: buttonText, title: buttonText }) : $("<button type='button'></button>").addClass(this._triggerClass).html(!buttonImage ? buttonText : $("<img/>").attr({ src: buttonImage, alt: buttonText, title: buttonText })));
+					input[isRTL ? "before" : "after"](inst.trigger);
+					inst.trigger.on("click", function () {
+						if ($.datepicker._datepickerShowing && $.datepicker._lastInput === input[0]) {
+							$.datepicker._hideDatepicker();
+						} else if ($.datepicker._datepickerShowing && $.datepicker._lastInput !== input[0]) {
+							$.datepicker._hideDatepicker();
+							$.datepicker._showDatepicker(input[0]);
+						} else {
+							$.datepicker._showDatepicker(input[0]);
+						}
+						return false;
+					});
+				}
+			},
+
+			/* Apply the maximum length for the date format. */
+			_autoSize: function (inst) {
+				if (this._get(inst, "autoSize") && !inst.inline) {
+					var findMax,
+					    max,
+					    maxI,
+					    i,
+					    date = new Date(2009, 12 - 1, 20),
+					    // Ensure double digits
+					dateFormat = this._get(inst, "dateFormat");
+
+					if (dateFormat.match(/[DM]/)) {
+						findMax = function (names) {
+							max = 0;
+							maxI = 0;
+							for (i = 0; i < names.length; i++) {
+								if (names[i].length > max) {
+									max = names[i].length;
+									maxI = i;
+								}
+							}
+							return maxI;
+						};
+						date.setMonth(findMax(this._get(inst, dateFormat.match(/MM/) ? "monthNames" : "monthNamesShort")));
+						date.setDate(findMax(this._get(inst, dateFormat.match(/DD/) ? "dayNames" : "dayNamesShort")) + 20 - date.getDay());
+					}
+					inst.input.attr("size", this._formatDate(inst, date).length);
+				}
+			},
+
+			/* Attach an inline date picker to a div. */
+			_inlineDatepicker: function (target, inst) {
+				var divSpan = $(target);
+				if (divSpan.hasClass(this.markerClassName)) {
+					return;
+				}
+				divSpan.addClass(this.markerClassName).append(inst.dpDiv);
+				$.data(target, "datepicker", inst);
+				this._setDate(inst, this._getDefaultDate(inst), true);
+				this._updateDatepicker(inst);
+				this._updateAlternate(inst);
+
+				//If disabled option is true, disable the datepicker before showing it (see ticket #5665)
+				if (inst.settings.disabled) {
+					this._disableDatepicker(target);
+				}
+
+				// Set display:block in place of inst.dpDiv.show() which won't work on disconnected elements
+				// http://bugs.jqueryui.com/ticket/7552 - A Datepicker created on a detached div has zero height
+				inst.dpDiv.css("display", "block");
+			},
+
+			/* Pop-up the date picker in a "dialog" box.
+    * @param  input element - ignored
+    * @param  date	string or Date - the initial date to display
+    * @param  onSelect  function - the function to call when a date is selected
+    * @param  settings  object - update the dialog date picker instance's settings (anonymous object)
+    * @param  pos int[2] - coordinates for the dialog's position within the screen or
+    *					event - with x/y coordinates or
+    *					leave empty for default (screen centre)
+    * @return the manager object
+    */
+			_dialogDatepicker: function (input, date, onSelect, settings, pos) {
+				var id,
+				    browserWidth,
+				    browserHeight,
+				    scrollX,
+				    scrollY,
+				    inst = this._dialogInst; // internal instance
+
+				if (!inst) {
+					this.uuid += 1;
+					id = "dp" + this.uuid;
+					this._dialogInput = $("<input type='text' id='" + id + "' style='position: absolute; top: -100px; width: 0px;'/>");
+					this._dialogInput.on("keydown", this._doKeyDown);
+					$("body").append(this._dialogInput);
+					inst = this._dialogInst = this._newInst(this._dialogInput, false);
+					inst.settings = {};
+					$.data(this._dialogInput[0], "datepicker", inst);
+				}
+				datepicker_extendRemove(inst.settings, settings || {});
+				date = date && date.constructor === Date ? this._formatDate(inst, date) : date;
+				this._dialogInput.val(date);
+
+				this._pos = pos ? pos.length ? pos : [pos.pageX, pos.pageY] : null;
+				if (!this._pos) {
+					browserWidth = document.documentElement.clientWidth;
+					browserHeight = document.documentElement.clientHeight;
+					scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+					scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+					this._pos = // should use actual width/height below
+					[browserWidth / 2 - 100 + scrollX, browserHeight / 2 - 150 + scrollY];
+				}
+
+				// Move input on screen for focus, but hidden behind dialog
+				this._dialogInput.css("left", this._pos[0] + 20 + "px").css("top", this._pos[1] + "px");
+				inst.settings.onSelect = onSelect;
+				this._inDialog = true;
+				this.dpDiv.addClass(this._dialogClass);
+				this._showDatepicker(this._dialogInput[0]);
+				if ($.blockUI) {
+					$.blockUI(this.dpDiv);
+				}
+				$.data(this._dialogInput[0], "datepicker", inst);
+				return this;
+			},
+
+			/* Detach a datepicker from its control.
+    * @param  target	element - the target input field or division or span
+    */
+			_destroyDatepicker: function (target) {
+				var nodeName,
+				    $target = $(target),
+				    inst = $.data(target, "datepicker");
+
+				if (!$target.hasClass(this.markerClassName)) {
+					return;
+				}
+
+				nodeName = target.nodeName.toLowerCase();
+				$.removeData(target, "datepicker");
+				if (nodeName === "input") {
+					inst.append.remove();
+					inst.trigger.remove();
+					$target.removeClass(this.markerClassName).off("focus", this._showDatepicker).off("keydown", this._doKeyDown).off("keypress", this._doKeyPress).off("keyup", this._doKeyUp);
+				} else if (nodeName === "div" || nodeName === "span") {
+					$target.removeClass(this.markerClassName).empty();
+				}
+
+				if (datepicker_instActive === inst) {
+					datepicker_instActive = null;
+				}
+			},
+
+			/* Enable the date picker to a jQuery selection.
+    * @param  target	element - the target input field or division or span
+    */
+			_enableDatepicker: function (target) {
+				var nodeName,
+				    inline,
+				    $target = $(target),
+				    inst = $.data(target, "datepicker");
+
+				if (!$target.hasClass(this.markerClassName)) {
+					return;
+				}
+
+				nodeName = target.nodeName.toLowerCase();
+				if (nodeName === "input") {
+					target.disabled = false;
+					inst.trigger.filter("button").each(function () {
+						this.disabled = false;
+					}).end().filter("img").css({ opacity: "1.0", cursor: "" });
+				} else if (nodeName === "div" || nodeName === "span") {
+					inline = $target.children("." + this._inlineClass);
+					inline.children().removeClass("ui-state-disabled");
+					inline.find("select.ui-datepicker-month, select.ui-datepicker-year").prop("disabled", false);
+				}
+				this._disabledInputs = $.map(this._disabledInputs, function (value) {
+					return value === target ? null : value;
+				}); // delete entry
+			},
+
+			/* Disable the date picker to a jQuery selection.
+    * @param  target	element - the target input field or division or span
+    */
+			_disableDatepicker: function (target) {
+				var nodeName,
+				    inline,
+				    $target = $(target),
+				    inst = $.data(target, "datepicker");
+
+				if (!$target.hasClass(this.markerClassName)) {
+					return;
+				}
+
+				nodeName = target.nodeName.toLowerCase();
+				if (nodeName === "input") {
+					target.disabled = true;
+					inst.trigger.filter("button").each(function () {
+						this.disabled = true;
+					}).end().filter("img").css({ opacity: "0.5", cursor: "default" });
+				} else if (nodeName === "div" || nodeName === "span") {
+					inline = $target.children("." + this._inlineClass);
+					inline.children().addClass("ui-state-disabled");
+					inline.find("select.ui-datepicker-month, select.ui-datepicker-year").prop("disabled", true);
+				}
+				this._disabledInputs = $.map(this._disabledInputs, function (value) {
+					return value === target ? null : value;
+				}); // delete entry
+				this._disabledInputs[this._disabledInputs.length] = target;
+			},
+
+			/* Is the first field in a jQuery collection disabled as a datepicker?
+    * @param  target	element - the target input field or division or span
+    * @return boolean - true if disabled, false if enabled
+    */
+			_isDisabledDatepicker: function (target) {
+				if (!target) {
+					return false;
+				}
+				for (var i = 0; i < this._disabledInputs.length; i++) {
+					if (this._disabledInputs[i] === target) {
+						return true;
+					}
+				}
+				return false;
+			},
+
+			/* Retrieve the instance data for the target control.
+    * @param  target  element - the target input field or division or span
+    * @return  object - the associated instance data
+    * @throws  error if a jQuery problem getting data
+    */
+			_getInst: function (target) {
+				try {
+					return $.data(target, "datepicker");
+				} catch (err) {
+					throw "Missing instance data for this datepicker";
+				}
+			},
+
+			/* Update or retrieve the settings for a date picker attached to an input field or division.
+    * @param  target  element - the target input field or division or span
+    * @param  name	object - the new settings to update or
+    *				string - the name of the setting to change or retrieve,
+    *				when retrieving also "all" for all instance settings or
+    *				"defaults" for all global defaults
+    * @param  value   any - the new value for the setting
+    *				(omit if above is an object or to retrieve a value)
+    */
+			_optionDatepicker: function (target, name, value) {
+				var settings,
+				    date,
+				    minDate,
+				    maxDate,
+				    inst = this._getInst(target);
+
+				if (arguments.length === 2 && typeof name === "string") {
+					return name === "defaults" ? $.extend({}, $.datepicker._defaults) : inst ? name === "all" ? $.extend({}, inst.settings) : this._get(inst, name) : null;
+				}
+
+				settings = name || {};
+				if (typeof name === "string") {
+					settings = {};
+					settings[name] = value;
+				}
+
+				if (inst) {
+					if (this._curInst === inst) {
+						this._hideDatepicker();
+					}
+
+					date = this._getDateDatepicker(target, true);
+					minDate = this._getMinMaxDate(inst, "min");
+					maxDate = this._getMinMaxDate(inst, "max");
+					datepicker_extendRemove(inst.settings, settings);
+
+					// reformat the old minDate/maxDate values if dateFormat changes and a new minDate/maxDate isn't provided
+					if (minDate !== null && settings.dateFormat !== undefined && settings.minDate === undefined) {
+						inst.settings.minDate = this._formatDate(inst, minDate);
+					}
+					if (maxDate !== null && settings.dateFormat !== undefined && settings.maxDate === undefined) {
+						inst.settings.maxDate = this._formatDate(inst, maxDate);
+					}
+					if ("disabled" in settings) {
+						if (settings.disabled) {
+							this._disableDatepicker(target);
+						} else {
+							this._enableDatepicker(target);
+						}
+					}
+					this._attachments($(target), inst);
+					this._autoSize(inst);
+					this._setDate(inst, date);
+					this._updateAlternate(inst);
+					this._updateDatepicker(inst);
+				}
+			},
+
+			// Change method deprecated
+			_changeDatepicker: function (target, name, value) {
+				this._optionDatepicker(target, name, value);
+			},
+
+			/* Redraw the date picker attached to an input field or division.
+    * @param  target  element - the target input field or division or span
+    */
+			_refreshDatepicker: function (target) {
+				var inst = this._getInst(target);
+				if (inst) {
+					this._updateDatepicker(inst);
+				}
+			},
+
+			/* Set the dates for a jQuery selection.
+    * @param  target element - the target input field or division or span
+    * @param  date	Date - the new date
+    */
+			_setDateDatepicker: function (target, date) {
+				var inst = this._getInst(target);
+				if (inst) {
+					this._setDate(inst, date);
+					this._updateDatepicker(inst);
+					this._updateAlternate(inst);
+				}
+			},
+
+			/* Get the date(s) for the first entry in a jQuery selection.
+    * @param  target element - the target input field or division or span
+    * @param  noDefault boolean - true if no default date is to be used
+    * @return Date - the current date
+    */
+			_getDateDatepicker: function (target, noDefault) {
+				var inst = this._getInst(target);
+				if (inst && !inst.inline) {
+					this._setDateFromField(inst, noDefault);
+				}
+				return inst ? this._getDate(inst) : null;
+			},
+
+			/* Handle keystrokes. */
+			_doKeyDown: function (event) {
+				var onSelect,
+				    dateStr,
+				    sel,
+				    inst = $.datepicker._getInst(event.target),
+				    handled = true,
+				    isRTL = inst.dpDiv.is(".ui-datepicker-rtl");
+
+				inst._keyEvent = true;
+				if ($.datepicker._datepickerShowing) {
+					switch (event.keyCode) {
+						case 9:
+							$.datepicker._hideDatepicker();
+							handled = false;
+							break; // hide on tab out
+						case 13:
+							sel = $("td." + $.datepicker._dayOverClass + ":not(." + $.datepicker._currentClass + ")", inst.dpDiv);
+							if (sel[0]) {
+								$.datepicker._selectDay(event.target, inst.selectedMonth, inst.selectedYear, sel[0]);
+							}
+
+							onSelect = $.datepicker._get(inst, "onSelect");
+							if (onSelect) {
+								dateStr = $.datepicker._formatDate(inst);
+
+								// Trigger custom callback
+								onSelect.apply(inst.input ? inst.input[0] : null, [dateStr, inst]);
+							} else {
+								$.datepicker._hideDatepicker();
+							}
+
+							return false; // don't submit the form
+						case 27:
+							$.datepicker._hideDatepicker();
+							break; // hide on escape
+						case 33:
+							$.datepicker._adjustDate(event.target, event.ctrlKey ? -$.datepicker._get(inst, "stepBigMonths") : -$.datepicker._get(inst, "stepMonths"), "M");
+							break; // previous month/year on page up/+ ctrl
+						case 34:
+							$.datepicker._adjustDate(event.target, event.ctrlKey ? +$.datepicker._get(inst, "stepBigMonths") : +$.datepicker._get(inst, "stepMonths"), "M");
+							break; // next month/year on page down/+ ctrl
+						case 35:
+							if (event.ctrlKey || event.metaKey) {
+								$.datepicker._clearDate(event.target);
+							}
+							handled = event.ctrlKey || event.metaKey;
+							break; // clear on ctrl or command +end
+						case 36:
+							if (event.ctrlKey || event.metaKey) {
+								$.datepicker._gotoToday(event.target);
+							}
+							handled = event.ctrlKey || event.metaKey;
+							break; // current on ctrl or command +home
+						case 37:
+							if (event.ctrlKey || event.metaKey) {
+								$.datepicker._adjustDate(event.target, isRTL ? +1 : -1, "D");
+							}
+							handled = event.ctrlKey || event.metaKey;
+
+							// -1 day on ctrl or command +left
+							if (event.originalEvent.altKey) {
+								$.datepicker._adjustDate(event.target, event.ctrlKey ? -$.datepicker._get(inst, "stepBigMonths") : -$.datepicker._get(inst, "stepMonths"), "M");
+							}
+
+							// next month/year on alt +left on Mac
+							break;
+						case 38:
+							if (event.ctrlKey || event.metaKey) {
+								$.datepicker._adjustDate(event.target, -7, "D");
+							}
+							handled = event.ctrlKey || event.metaKey;
+							break; // -1 week on ctrl or command +up
+						case 39:
+							if (event.ctrlKey || event.metaKey) {
+								$.datepicker._adjustDate(event.target, isRTL ? -1 : +1, "D");
+							}
+							handled = event.ctrlKey || event.metaKey;
+
+							// +1 day on ctrl or command +right
+							if (event.originalEvent.altKey) {
+								$.datepicker._adjustDate(event.target, event.ctrlKey ? +$.datepicker._get(inst, "stepBigMonths") : +$.datepicker._get(inst, "stepMonths"), "M");
+							}
+
+							// next month/year on alt +right
+							break;
+						case 40:
+							if (event.ctrlKey || event.metaKey) {
+								$.datepicker._adjustDate(event.target, +7, "D");
+							}
+							handled = event.ctrlKey || event.metaKey;
+							break; // +1 week on ctrl or command +down
+						default:
+							handled = false;
+					}
+				} else if (event.keyCode === 36 && event.ctrlKey) {
+					// display the date picker on ctrl+home
+					$.datepicker._showDatepicker(this);
+				} else {
+					handled = false;
+				}
+
+				if (handled) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			},
+
+			/* Filter entered characters - based on date format. */
+			_doKeyPress: function (event) {
+				var chars,
+				    chr,
+				    inst = $.datepicker._getInst(event.target);
+
+				if ($.datepicker._get(inst, "constrainInput")) {
+					chars = $.datepicker._possibleChars($.datepicker._get(inst, "dateFormat"));
+					chr = String.fromCharCode(event.charCode == null ? event.keyCode : event.charCode);
+					return event.ctrlKey || event.metaKey || chr < " " || !chars || chars.indexOf(chr) > -1;
+				}
+			},
+
+			/* Synchronise manual entry and field/alternate field. */
+			_doKeyUp: function (event) {
+				var date,
+				    inst = $.datepicker._getInst(event.target);
+
+				if (inst.input.val() !== inst.lastVal) {
+					try {
+						date = $.datepicker.parseDate($.datepicker._get(inst, "dateFormat"), inst.input ? inst.input.val() : null, $.datepicker._getFormatConfig(inst));
+
+						if (date) {
+							// only if valid
+							$.datepicker._setDateFromField(inst);
+							$.datepicker._updateAlternate(inst);
+							$.datepicker._updateDatepicker(inst);
+						}
+					} catch (err) {}
+				}
+				return true;
+			},
+
+			/* Pop-up the date picker for a given input field.
+    * If false returned from beforeShow event handler do not show.
+    * @param  input  element - the input field attached to the date picker or
+    *					event - if triggered by focus
+    */
+			_showDatepicker: function (input) {
+				input = input.target || input;
+				if (input.nodeName.toLowerCase() !== "input") {
+					// find from button/image trigger
+					input = $("input", input.parentNode)[0];
+				}
+
+				if ($.datepicker._isDisabledDatepicker(input) || $.datepicker._lastInput === input) {
+					// already here
+					return;
+				}
+
+				var inst, beforeShow, beforeShowSettings, isFixed, offset, showAnim, duration;
+
+				inst = $.datepicker._getInst(input);
+				if ($.datepicker._curInst && $.datepicker._curInst !== inst) {
+					$.datepicker._curInst.dpDiv.stop(true, true);
+					if (inst && $.datepicker._datepickerShowing) {
+						$.datepicker._hideDatepicker($.datepicker._curInst.input[0]);
+					}
+				}
+
+				beforeShow = $.datepicker._get(inst, "beforeShow");
+				beforeShowSettings = beforeShow ? beforeShow.apply(input, [input, inst]) : {};
+				if (beforeShowSettings === false) {
+					return;
+				}
+				datepicker_extendRemove(inst.settings, beforeShowSettings);
+
+				inst.lastVal = null;
+				$.datepicker._lastInput = input;
+				$.datepicker._setDateFromField(inst);
+
+				if ($.datepicker._inDialog) {
+					// hide cursor
+					input.value = "";
+				}
+				if (!$.datepicker._pos) {
+					// position below input
+					$.datepicker._pos = $.datepicker._findPos(input);
+					$.datepicker._pos[1] += input.offsetHeight; // add the height
+				}
+
+				isFixed = false;
+				$(input).parents().each(function () {
+					isFixed |= $(this).css("position") === "fixed";
+					return !isFixed;
+				});
+
+				offset = { left: $.datepicker._pos[0], top: $.datepicker._pos[1] };
+				$.datepicker._pos = null;
+
+				//to avoid flashes on Firefox
+				inst.dpDiv.empty();
+
+				// determine sizing offscreen
+				inst.dpDiv.css({ position: "absolute", display: "block", top: "-1000px" });
+				$.datepicker._updateDatepicker(inst);
+
+				// fix width for dynamic number of date pickers
+				// and adjust position before showing
+				offset = $.datepicker._checkOffset(inst, offset, isFixed);
+				inst.dpDiv.css({ position: $.datepicker._inDialog && $.blockUI ? "static" : isFixed ? "fixed" : "absolute", display: "none",
+					left: offset.left + "px", top: offset.top + "px" });
+
+				if (!inst.inline) {
+					showAnim = $.datepicker._get(inst, "showAnim");
+					duration = $.datepicker._get(inst, "duration");
+					inst.dpDiv.css("z-index", datepicker_getZindex($(input)) + 1);
+					$.datepicker._datepickerShowing = true;
+
+					if ($.effects && $.effects.effect[showAnim]) {
+						inst.dpDiv.show(showAnim, $.datepicker._get(inst, "showOptions"), duration);
+					} else {
+						inst.dpDiv[showAnim || "show"](showAnim ? duration : null);
+					}
+
+					if ($.datepicker._shouldFocusInput(inst)) {
+						inst.input.trigger("focus");
+					}
+
+					$.datepicker._curInst = inst;
+				}
+			},
+
+			/* Generate the date picker content. */
+			_updateDatepicker: function (inst) {
+				this.maxRows = 4; //Reset the max number of rows being displayed (see #7043)
+				datepicker_instActive = inst; // for delegate hover events
+				inst.dpDiv.empty().append(this._generateHTML(inst));
+				this._attachHandlers(inst);
+
+				var origyearshtml,
+				    numMonths = this._getNumberOfMonths(inst),
+				    cols = numMonths[1],
+				    width = 17,
+				    activeCell = inst.dpDiv.find("." + this._dayOverClass + " a");
+
+				if (activeCell.length > 0) {
+					datepicker_handleMouseover.apply(activeCell.get(0));
+				}
+
+				inst.dpDiv.removeClass("ui-datepicker-multi-2 ui-datepicker-multi-3 ui-datepicker-multi-4").width("");
+				if (cols > 1) {
+					inst.dpDiv.addClass("ui-datepicker-multi-" + cols).css("width", width * cols + "em");
+				}
+				inst.dpDiv[(numMonths[0] !== 1 || numMonths[1] !== 1 ? "add" : "remove") + "Class"]("ui-datepicker-multi");
+				inst.dpDiv[(this._get(inst, "isRTL") ? "add" : "remove") + "Class"]("ui-datepicker-rtl");
+
+				if (inst === $.datepicker._curInst && $.datepicker._datepickerShowing && $.datepicker._shouldFocusInput(inst)) {
+					inst.input.trigger("focus");
+				}
+
+				// Deffered render of the years select (to avoid flashes on Firefox)
+				if (inst.yearshtml) {
+					origyearshtml = inst.yearshtml;
+					setTimeout(function () {
+
+						//assure that inst.yearshtml didn't change.
+						if (origyearshtml === inst.yearshtml && inst.yearshtml) {
+							inst.dpDiv.find("select.ui-datepicker-year:first").replaceWith(inst.yearshtml);
+						}
+						origyearshtml = inst.yearshtml = null;
+					}, 0);
+				}
+			},
+
+			// #6694 - don't focus the input if it's already focused
+			// this breaks the change event in IE
+			// Support: IE and jQuery <1.9
+			_shouldFocusInput: function (inst) {
+				return inst.input && inst.input.is(":visible") && !inst.input.is(":disabled") && !inst.input.is(":focus");
+			},
+
+			/* Check positioning to remain on screen. */
+			_checkOffset: function (inst, offset, isFixed) {
+				var dpWidth = inst.dpDiv.outerWidth(),
+				    dpHeight = inst.dpDiv.outerHeight(),
+				    inputWidth = inst.input ? inst.input.outerWidth() : 0,
+				    inputHeight = inst.input ? inst.input.outerHeight() : 0,
+				    viewWidth = document.documentElement.clientWidth + (isFixed ? 0 : $(document).scrollLeft()),
+				    viewHeight = document.documentElement.clientHeight + (isFixed ? 0 : $(document).scrollTop());
+
+				offset.left -= this._get(inst, "isRTL") ? dpWidth - inputWidth : 0;
+				offset.left -= isFixed && offset.left === inst.input.offset().left ? $(document).scrollLeft() : 0;
+				offset.top -= isFixed && offset.top === inst.input.offset().top + inputHeight ? $(document).scrollTop() : 0;
+
+				// Now check if datepicker is showing outside window viewport - move to a better place if so.
+				offset.left -= Math.min(offset.left, offset.left + dpWidth > viewWidth && viewWidth > dpWidth ? Math.abs(offset.left + dpWidth - viewWidth) : 0);
+				offset.top -= Math.min(offset.top, offset.top + dpHeight > viewHeight && viewHeight > dpHeight ? Math.abs(dpHeight + inputHeight) : 0);
+
+				return offset;
+			},
+
+			/* Find an object's position on the screen. */
+			_findPos: function (obj) {
+				var position,
+				    inst = this._getInst(obj),
+				    isRTL = this._get(inst, "isRTL");
+
+				while (obj && (obj.type === "hidden" || obj.nodeType !== 1 || $.expr.filters.hidden(obj))) {
+					obj = obj[isRTL ? "previousSibling" : "nextSibling"];
+				}
+
+				position = $(obj).offset();
+				return [position.left, position.top];
+			},
+
+			/* Hide the date picker from view.
+    * @param  input  element - the input field attached to the date picker
+    */
+			_hideDatepicker: function (input) {
+				var showAnim,
+				    duration,
+				    postProcess,
+				    onClose,
+				    inst = this._curInst;
+
+				if (!inst || input && inst !== $.data(input, "datepicker")) {
+					return;
+				}
+
+				if (this._datepickerShowing) {
+					showAnim = this._get(inst, "showAnim");
+					duration = this._get(inst, "duration");
+					postProcess = function () {
+						$.datepicker._tidyDialog(inst);
+					};
+
+					// DEPRECATED: after BC for 1.8.x $.effects[ showAnim ] is not needed
+					if ($.effects && ($.effects.effect[showAnim] || $.effects[showAnim])) {
+						inst.dpDiv.hide(showAnim, $.datepicker._get(inst, "showOptions"), duration, postProcess);
+					} else {
+						inst.dpDiv[showAnim === "slideDown" ? "slideUp" : showAnim === "fadeIn" ? "fadeOut" : "hide"](showAnim ? duration : null, postProcess);
+					}
+
+					if (!showAnim) {
+						postProcess();
+					}
+					this._datepickerShowing = false;
+
+					onClose = this._get(inst, "onClose");
+					if (onClose) {
+						onClose.apply(inst.input ? inst.input[0] : null, [inst.input ? inst.input.val() : "", inst]);
+					}
+
+					this._lastInput = null;
+					if (this._inDialog) {
+						this._dialogInput.css({ position: "absolute", left: "0", top: "-100px" });
+						if ($.blockUI) {
+							$.unblockUI();
+							$("body").append(this.dpDiv);
+						}
+					}
+					this._inDialog = false;
+				}
+			},
+
+			/* Tidy up after a dialog display. */
+			_tidyDialog: function (inst) {
+				inst.dpDiv.removeClass(this._dialogClass).off(".ui-datepicker-calendar");
+			},
+
+			/* Close date picker if clicked elsewhere. */
+			_checkExternalClick: function (event) {
+				if (!$.datepicker._curInst) {
+					return;
+				}
+
+				var $target = $(event.target),
+				    inst = $.datepicker._getInst($target[0]);
+
+				if ($target[0].id !== $.datepicker._mainDivId && $target.parents("#" + $.datepicker._mainDivId).length === 0 && !$target.hasClass($.datepicker.markerClassName) && !$target.closest("." + $.datepicker._triggerClass).length && $.datepicker._datepickerShowing && !($.datepicker._inDialog && $.blockUI) || $target.hasClass($.datepicker.markerClassName) && $.datepicker._curInst !== inst) {
+					$.datepicker._hideDatepicker();
+				}
+			},
+
+			/* Adjust one of the date sub-fields. */
+			_adjustDate: function (id, offset, period) {
+				var target = $(id),
+				    inst = this._getInst(target[0]);
+
+				if (this._isDisabledDatepicker(target[0])) {
+					return;
+				}
+				this._adjustInstDate(inst, offset, period);
+				this._updateDatepicker(inst);
+			},
+
+			/* Action for current link. */
+			_gotoToday: function (id) {
+				var date,
+				    target = $(id),
+				    inst = this._getInst(target[0]);
+
+				if (this._get(inst, "gotoCurrent") && inst.currentDay) {
+					inst.selectedDay = inst.currentDay;
+					inst.drawMonth = inst.selectedMonth = inst.currentMonth;
+					inst.drawYear = inst.selectedYear = inst.currentYear;
+				} else {
+					date = new Date();
+					inst.selectedDay = date.getDate();
+					inst.drawMonth = inst.selectedMonth = date.getMonth();
+					inst.drawYear = inst.selectedYear = date.getFullYear();
+				}
+				this._notifyChange(inst);
+				this._adjustDate(target);
+			},
+
+			/* Action for selecting a new month/year. */
+			_selectMonthYear: function (id, select, period) {
+				var target = $(id),
+				    inst = this._getInst(target[0]);
+
+				inst["selected" + (period === "M" ? "Month" : "Year")] = inst["draw" + (period === "M" ? "Month" : "Year")] = parseInt(select.options[select.selectedIndex].value, 10);
+
+				this._notifyChange(inst);
+				this._adjustDate(target);
+			},
+
+			/* Action for selecting a day. */
+			_selectDay: function (id, month, year, td) {
+				var inst,
+				    target = $(id);
+
+				if ($(td).hasClass(this._unselectableClass) || this._isDisabledDatepicker(target[0])) {
+					return;
+				}
+
+				inst = this._getInst(target[0]);
+				inst.selectedDay = inst.currentDay = $("a", td).html();
+				inst.selectedMonth = inst.currentMonth = month;
+				inst.selectedYear = inst.currentYear = year;
+				this._selectDate(id, this._formatDate(inst, inst.currentDay, inst.currentMonth, inst.currentYear));
+			},
+
+			/* Erase the input field and hide the date picker. */
+			_clearDate: function (id) {
+				var target = $(id);
+				this._selectDate(target, "");
+			},
+
+			/* Update the input field with the selected date. */
+			_selectDate: function (id, dateStr) {
+				var onSelect,
+				    target = $(id),
+				    inst = this._getInst(target[0]);
+
+				dateStr = dateStr != null ? dateStr : this._formatDate(inst);
+				if (inst.input) {
+					inst.input.val(dateStr);
+				}
+				this._updateAlternate(inst);
+
+				onSelect = this._get(inst, "onSelect");
+				if (onSelect) {
+					onSelect.apply(inst.input ? inst.input[0] : null, [dateStr, inst]); // trigger custom callback
+				} else if (inst.input) {
+					inst.input.trigger("change"); // fire the change event
+				}
+
+				if (inst.inline) {
+					this._updateDatepicker(inst);
+				} else {
+					this._hideDatepicker();
+					this._lastInput = inst.input[0];
+					if (typeof inst.input[0] !== "object") {
+						inst.input.trigger("focus"); // restore focus
+					}
+					this._lastInput = null;
+				}
+			},
+
+			/* Update any alternate field to synchronise with the main field. */
+			_updateAlternate: function (inst) {
+				var altFormat,
+				    date,
+				    dateStr,
+				    altField = this._get(inst, "altField");
+
+				if (altField) {
+					// update alternate field too
+					altFormat = this._get(inst, "altFormat") || this._get(inst, "dateFormat");
+					date = this._getDate(inst);
+					dateStr = this.formatDate(altFormat, date, this._getFormatConfig(inst));
+					$(altField).val(dateStr);
+				}
+			},
+
+			/* Set as beforeShowDay function to prevent selection of weekends.
+    * @param  date  Date - the date to customise
+    * @return [boolean, string] - is this date selectable?, what is its CSS class?
+    */
+			noWeekends: function (date) {
+				var day = date.getDay();
+				return [day > 0 && day < 6, ""];
+			},
+
+			/* Set as calculateWeek to determine the week of the year based on the ISO 8601 definition.
+    * @param  date  Date - the date to get the week for
+    * @return  number - the number of the week within the year that contains this date
+    */
+			iso8601Week: function (date) {
+				var time,
+				    checkDate = new Date(date.getTime());
+
+				// Find Thursday of this week starting on Monday
+				checkDate.setDate(checkDate.getDate() + 4 - (checkDate.getDay() || 7));
+
+				time = checkDate.getTime();
+				checkDate.setMonth(0); // Compare with Jan 1
+				checkDate.setDate(1);
+				return Math.floor(Math.round((time - checkDate) / 86400000) / 7) + 1;
+			},
+
+			/* Parse a string value into a date object.
+    * See formatDate below for the possible formats.
+    *
+    * @param  format string - the expected format of the date
+    * @param  value string - the date in the above format
+    * @param  settings Object - attributes include:
+    *					shortYearCutoff  number - the cutoff year for determining the century (optional)
+    *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
+    *					dayNames		string[7] - names of the days from Sunday (optional)
+    *					monthNamesShort string[12] - abbreviated names of the months (optional)
+    *					monthNames		string[12] - names of the months (optional)
+    * @return  Date - the extracted date value or null if value is blank
+    */
+			parseDate: function (format, value, settings) {
+				if (format == null || value == null) {
+					throw "Invalid arguments";
+				}
+
+				value = typeof value === "object" ? value.toString() : value + "";
+				if (value === "") {
+					return null;
+				}
+
+				var iFormat,
+				    dim,
+				    extra,
+				    iValue = 0,
+				    shortYearCutoffTemp = (settings ? settings.shortYearCutoff : null) || this._defaults.shortYearCutoff,
+				    shortYearCutoff = typeof shortYearCutoffTemp !== "string" ? shortYearCutoffTemp : new Date().getFullYear() % 100 + parseInt(shortYearCutoffTemp, 10),
+				    dayNamesShort = (settings ? settings.dayNamesShort : null) || this._defaults.dayNamesShort,
+				    dayNames = (settings ? settings.dayNames : null) || this._defaults.dayNames,
+				    monthNamesShort = (settings ? settings.monthNamesShort : null) || this._defaults.monthNamesShort,
+				    monthNames = (settings ? settings.monthNames : null) || this._defaults.monthNames,
+				    year = -1,
+				    month = -1,
+				    day = -1,
+				    doy = -1,
+				    literal = false,
+				    date,
+
+
+				// Check whether a format character is doubled
+				lookAhead = function (match) {
+					var matches = iFormat + 1 < format.length && format.charAt(iFormat + 1) === match;
+					if (matches) {
+						iFormat++;
+					}
+					return matches;
+				},
+
+
+				// Extract a number from the string value
+				getNumber = function (match) {
+					var isDoubled = lookAhead(match),
+					    size = match === "@" ? 14 : match === "!" ? 20 : match === "y" && isDoubled ? 4 : match === "o" ? 3 : 2,
+					    minSize = match === "y" ? size : 1,
+					    digits = new RegExp("^\\d{" + minSize + "," + size + "}"),
+					    num = value.substring(iValue).match(digits);
+					if (!num) {
+						throw "Missing number at position " + iValue;
+					}
+					iValue += num[0].length;
+					return parseInt(num[0], 10);
+				},
+
+
+				// Extract a name from the string value and convert to an index
+				getName = function (match, shortNames, longNames) {
+					var index = -1,
+					    names = $.map(lookAhead(match) ? longNames : shortNames, function (v, k) {
+						return [[k, v]];
+					}).sort(function (a, b) {
+						return -(a[1].length - b[1].length);
+					});
+
+					$.each(names, function (i, pair) {
+						var name = pair[1];
+						if (value.substr(iValue, name.length).toLowerCase() === name.toLowerCase()) {
+							index = pair[0];
+							iValue += name.length;
+							return false;
+						}
+					});
+					if (index !== -1) {
+						return index + 1;
+					} else {
+						throw "Unknown name at position " + iValue;
+					}
+				},
+
+
+				// Confirm that a literal character matches the string value
+				checkLiteral = function () {
+					if (value.charAt(iValue) !== format.charAt(iFormat)) {
+						throw "Unexpected literal at position " + iValue;
+					}
+					iValue++;
+				};
+
+				for (iFormat = 0; iFormat < format.length; iFormat++) {
+					if (literal) {
+						if (format.charAt(iFormat) === "'" && !lookAhead("'")) {
+							literal = false;
+						} else {
+							checkLiteral();
+						}
+					} else {
+						switch (format.charAt(iFormat)) {
+							case "d":
+								day = getNumber("d");
+								break;
+							case "D":
+								getName("D", dayNamesShort, dayNames);
+								break;
+							case "o":
+								doy = getNumber("o");
+								break;
+							case "m":
+								month = getNumber("m");
+								break;
+							case "M":
+								month = getName("M", monthNamesShort, monthNames);
+								break;
+							case "y":
+								year = getNumber("y");
+								break;
+							case "@":
+								date = new Date(getNumber("@"));
+								year = date.getFullYear();
+								month = date.getMonth() + 1;
+								day = date.getDate();
+								break;
+							case "!":
+								date = new Date((getNumber("!") - this._ticksTo1970) / 10000);
+								year = date.getFullYear();
+								month = date.getMonth() + 1;
+								day = date.getDate();
+								break;
+							case "'":
+								if (lookAhead("'")) {
+									checkLiteral();
+								} else {
+									literal = true;
+								}
+								break;
+							default:
+								checkLiteral();
+						}
+					}
+				}
+
+				if (iValue < value.length) {
+					extra = value.substr(iValue);
+					if (!/^\s+/.test(extra)) {
+						throw "Extra/unparsed characters found in date: " + extra;
+					}
+				}
+
+				if (year === -1) {
+					year = new Date().getFullYear();
+				} else if (year < 100) {
+					year += new Date().getFullYear() - new Date().getFullYear() % 100 + (year <= shortYearCutoff ? 0 : -100);
+				}
+
+				if (doy > -1) {
+					month = 1;
+					day = doy;
+					do {
+						dim = this._getDaysInMonth(year, month - 1);
+						if (day <= dim) {
+							break;
+						}
+						month++;
+						day -= dim;
+					} while (true);
+				}
+
+				date = this._daylightSavingAdjust(new Date(year, month - 1, day));
+				if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+					throw "Invalid date"; // E.g. 31/02/00
+				}
+				return date;
+			},
+
+			/* Standard date formats. */
+			ATOM: "yy-mm-dd", // RFC 3339 (ISO 8601)
+			COOKIE: "D, dd M yy",
+			ISO_8601: "yy-mm-dd",
+			RFC_822: "D, d M y",
+			RFC_850: "DD, dd-M-y",
+			RFC_1036: "D, d M y",
+			RFC_1123: "D, d M yy",
+			RFC_2822: "D, d M yy",
+			RSS: "D, d M y", // RFC 822
+			TICKS: "!",
+			TIMESTAMP: "@",
+			W3C: "yy-mm-dd", // ISO 8601
+
+			_ticksTo1970: ((1970 - 1) * 365 + Math.floor(1970 / 4) - Math.floor(1970 / 100) + Math.floor(1970 / 400)) * 24 * 60 * 60 * 10000000,
+
+			/* Format a date object into a string value.
+    * The format can be combinations of the following:
+    * d  - day of month (no leading zero)
+    * dd - day of month (two digit)
+    * o  - day of year (no leading zeros)
+    * oo - day of year (three digit)
+    * D  - day name short
+    * DD - day name long
+    * m  - month of year (no leading zero)
+    * mm - month of year (two digit)
+    * M  - month name short
+    * MM - month name long
+    * y  - year (two digit)
+    * yy - year (four digit)
+    * @ - Unix timestamp (ms since 01/01/1970)
+    * ! - Windows ticks (100ns since 01/01/0001)
+    * "..." - literal text
+    * '' - single quote
+    *
+    * @param  format string - the desired format of the date
+    * @param  date Date - the date value to format
+    * @param  settings Object - attributes include:
+    *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
+    *					dayNames		string[7] - names of the days from Sunday (optional)
+    *					monthNamesShort string[12] - abbreviated names of the months (optional)
+    *					monthNames		string[12] - names of the months (optional)
+    * @return  string - the date in the above format
+    */
+			formatDate: function (format, date, settings) {
+				if (!date) {
+					return "";
+				}
+
+				var iFormat,
+				    dayNamesShort = (settings ? settings.dayNamesShort : null) || this._defaults.dayNamesShort,
+				    dayNames = (settings ? settings.dayNames : null) || this._defaults.dayNames,
+				    monthNamesShort = (settings ? settings.monthNamesShort : null) || this._defaults.monthNamesShort,
+				    monthNames = (settings ? settings.monthNames : null) || this._defaults.monthNames,
+
+
+				// Check whether a format character is doubled
+				lookAhead = function (match) {
+					var matches = iFormat + 1 < format.length && format.charAt(iFormat + 1) === match;
+					if (matches) {
+						iFormat++;
+					}
+					return matches;
+				},
+
+
+				// Format a number, with leading zero if necessary
+				formatNumber = function (match, value, len) {
+					var num = "" + value;
+					if (lookAhead(match)) {
+						while (num.length < len) {
+							num = "0" + num;
+						}
+					}
+					return num;
+				},
+
+
+				// Format a name, short or long as requested
+				formatName = function (match, value, shortNames, longNames) {
+					return lookAhead(match) ? longNames[value] : shortNames[value];
+				},
+				    output = "",
+				    literal = false;
+
+				if (date) {
+					for (iFormat = 0; iFormat < format.length; iFormat++) {
+						if (literal) {
+							if (format.charAt(iFormat) === "'" && !lookAhead("'")) {
+								literal = false;
+							} else {
+								output += format.charAt(iFormat);
+							}
+						} else {
+							switch (format.charAt(iFormat)) {
+								case "d":
+									output += formatNumber("d", date.getDate(), 2);
+									break;
+								case "D":
+									output += formatName("D", date.getDay(), dayNamesShort, dayNames);
+									break;
+								case "o":
+									output += formatNumber("o", Math.round((new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000), 3);
+									break;
+								case "m":
+									output += formatNumber("m", date.getMonth() + 1, 2);
+									break;
+								case "M":
+									output += formatName("M", date.getMonth(), monthNamesShort, monthNames);
+									break;
+								case "y":
+									output += lookAhead("y") ? date.getFullYear() : (date.getFullYear() % 100 < 10 ? "0" : "") + date.getFullYear() % 100;
+									break;
+								case "@":
+									output += date.getTime();
+									break;
+								case "!":
+									output += date.getTime() * 10000 + this._ticksTo1970;
+									break;
+								case "'":
+									if (lookAhead("'")) {
+										output += "'";
+									} else {
+										literal = true;
+									}
+									break;
+								default:
+									output += format.charAt(iFormat);
+							}
+						}
+					}
+				}
+				return output;
+			},
+
+			/* Extract all possible characters from the date format. */
+			_possibleChars: function (format) {
+				var iFormat,
+				    chars = "",
+				    literal = false,
+
+
+				// Check whether a format character is doubled
+				lookAhead = function (match) {
+					var matches = iFormat + 1 < format.length && format.charAt(iFormat + 1) === match;
+					if (matches) {
+						iFormat++;
+					}
+					return matches;
+				};
+
+				for (iFormat = 0; iFormat < format.length; iFormat++) {
+					if (literal) {
+						if (format.charAt(iFormat) === "'" && !lookAhead("'")) {
+							literal = false;
+						} else {
+							chars += format.charAt(iFormat);
+						}
+					} else {
+						switch (format.charAt(iFormat)) {
+							case "d":case "m":case "y":case "@":
+								chars += "0123456789";
+								break;
+							case "D":case "M":
+								return null; // Accept anything
+							case "'":
+								if (lookAhead("'")) {
+									chars += "'";
+								} else {
+									literal = true;
+								}
+								break;
+							default:
+								chars += format.charAt(iFormat);
+						}
+					}
+				}
+				return chars;
+			},
+
+			/* Get a setting value, defaulting if necessary. */
+			_get: function (inst, name) {
+				return inst.settings[name] !== undefined ? inst.settings[name] : this._defaults[name];
+			},
+
+			/* Parse existing date and initialise date picker. */
+			_setDateFromField: function (inst, noDefault) {
+				if (inst.input.val() === inst.lastVal) {
+					return;
+				}
+
+				var dateFormat = this._get(inst, "dateFormat"),
+				    dates = inst.lastVal = inst.input ? inst.input.val() : null,
+				    defaultDate = this._getDefaultDate(inst),
+				    date = defaultDate,
+				    settings = this._getFormatConfig(inst);
+
+				try {
+					date = this.parseDate(dateFormat, dates, settings) || defaultDate;
+				} catch (event) {
+					dates = noDefault ? "" : dates;
+				}
+				inst.selectedDay = date.getDate();
+				inst.drawMonth = inst.selectedMonth = date.getMonth();
+				inst.drawYear = inst.selectedYear = date.getFullYear();
+				inst.currentDay = dates ? date.getDate() : 0;
+				inst.currentMonth = dates ? date.getMonth() : 0;
+				inst.currentYear = dates ? date.getFullYear() : 0;
+				this._adjustInstDate(inst);
+			},
+
+			/* Retrieve the default date shown on opening. */
+			_getDefaultDate: function (inst) {
+				return this._restrictMinMax(inst, this._determineDate(inst, this._get(inst, "defaultDate"), new Date()));
+			},
+
+			/* A date may be specified as an exact value or a relative one. */
+			_determineDate: function (inst, date, defaultDate) {
+				var offsetNumeric = function (offset) {
+					var date = new Date();
+					date.setDate(date.getDate() + offset);
+					return date;
+				},
+				    offsetString = function (offset) {
+					try {
+						return $.datepicker.parseDate($.datepicker._get(inst, "dateFormat"), offset, $.datepicker._getFormatConfig(inst));
+					} catch (e) {
+
+						// Ignore
+					}
+
+					var date = (offset.toLowerCase().match(/^c/) ? $.datepicker._getDate(inst) : null) || new Date(),
+					    year = date.getFullYear(),
+					    month = date.getMonth(),
+					    day = date.getDate(),
+					    pattern = /([+\-]?[0-9]+)\s*(d|D|w|W|m|M|y|Y)?/g,
+					    matches = pattern.exec(offset);
+
+					while (matches) {
+						switch (matches[2] || "d") {
+							case "d":case "D":
+								day += parseInt(matches[1], 10);break;
+							case "w":case "W":
+								day += parseInt(matches[1], 10) * 7;break;
+							case "m":case "M":
+								month += parseInt(matches[1], 10);
+								day = Math.min(day, $.datepicker._getDaysInMonth(year, month));
+								break;
+							case "y":case "Y":
+								year += parseInt(matches[1], 10);
+								day = Math.min(day, $.datepicker._getDaysInMonth(year, month));
+								break;
+						}
+						matches = pattern.exec(offset);
+					}
+					return new Date(year, month, day);
+				},
+				    newDate = date == null || date === "" ? defaultDate : typeof date === "string" ? offsetString(date) : typeof date === "number" ? isNaN(date) ? defaultDate : offsetNumeric(date) : new Date(date.getTime());
+
+				newDate = newDate && newDate.toString() === "Invalid Date" ? defaultDate : newDate;
+				if (newDate) {
+					newDate.setHours(0);
+					newDate.setMinutes(0);
+					newDate.setSeconds(0);
+					newDate.setMilliseconds(0);
+				}
+				return this._daylightSavingAdjust(newDate);
+			},
+
+			/* Handle switch to/from daylight saving.
+    * Hours may be non-zero on daylight saving cut-over:
+    * > 12 when midnight changeover, but then cannot generate
+    * midnight datetime, so jump to 1AM, otherwise reset.
+    * @param  date  (Date) the date to check
+    * @return  (Date) the corrected date
+    */
+			_daylightSavingAdjust: function (date) {
+				if (!date) {
+					return null;
+				}
+				date.setHours(date.getHours() > 12 ? date.getHours() + 2 : 0);
+				return date;
+			},
+
+			/* Set the date(s) directly. */
+			_setDate: function (inst, date, noChange) {
+				var clear = !date,
+				    origMonth = inst.selectedMonth,
+				    origYear = inst.selectedYear,
+				    newDate = this._restrictMinMax(inst, this._determineDate(inst, date, new Date()));
+
+				inst.selectedDay = inst.currentDay = newDate.getDate();
+				inst.drawMonth = inst.selectedMonth = inst.currentMonth = newDate.getMonth();
+				inst.drawYear = inst.selectedYear = inst.currentYear = newDate.getFullYear();
+				if ((origMonth !== inst.selectedMonth || origYear !== inst.selectedYear) && !noChange) {
+					this._notifyChange(inst);
+				}
+				this._adjustInstDate(inst);
+				if (inst.input) {
+					inst.input.val(clear ? "" : this._formatDate(inst));
+				}
+			},
+
+			/* Retrieve the date(s) directly. */
+			_getDate: function (inst) {
+				var startDate = !inst.currentYear || inst.input && inst.input.val() === "" ? null : this._daylightSavingAdjust(new Date(inst.currentYear, inst.currentMonth, inst.currentDay));
+				return startDate;
+			},
+
+			/* Attach the onxxx handlers.  These are declared statically so
+    * they work with static code transformers like Caja.
+    */
+			_attachHandlers: function (inst) {
+				var stepMonths = this._get(inst, "stepMonths"),
+				    id = "#" + inst.id.replace(/\\\\/g, "\\");
+				inst.dpDiv.find("[data-handler]").map(function () {
+					var handler = {
+						prev: function () {
+							$.datepicker._adjustDate(id, -stepMonths, "M");
+						},
+						next: function () {
+							$.datepicker._adjustDate(id, +stepMonths, "M");
+						},
+						hide: function () {
+							$.datepicker._hideDatepicker();
+						},
+						today: function () {
+							$.datepicker._gotoToday(id);
+						},
+						selectDay: function () {
+							$.datepicker._selectDay(id, +this.getAttribute("data-month"), +this.getAttribute("data-year"), this);
+							return false;
+						},
+						selectMonth: function () {
+							$.datepicker._selectMonthYear(id, this, "M");
+							return false;
+						},
+						selectYear: function () {
+							$.datepicker._selectMonthYear(id, this, "Y");
+							return false;
+						}
+					};
+					$(this).on(this.getAttribute("data-event"), handler[this.getAttribute("data-handler")]);
+				});
+			},
+
+			/* Generate the HTML for the current state of the date picker. */
+			_generateHTML: function (inst) {
+				var maxDraw,
+				    prevText,
+				    prev,
+				    nextText,
+				    next,
+				    currentText,
+				    gotoDate,
+				    controls,
+				    buttonPanel,
+				    firstDay,
+				    showWeek,
+				    dayNames,
+				    dayNamesMin,
+				    monthNames,
+				    monthNamesShort,
+				    beforeShowDay,
+				    showOtherMonths,
+				    selectOtherMonths,
+				    defaultDate,
+				    html,
+				    dow,
+				    row,
+				    group,
+				    col,
+				    selectedDate,
+				    cornerClass,
+				    calender,
+				    thead,
+				    day,
+				    daysInMonth,
+				    leadDays,
+				    curRows,
+				    numRows,
+				    printDate,
+				    dRow,
+				    tbody,
+				    daySettings,
+				    otherMonth,
+				    unselectable,
+				    tempDate = new Date(),
+				    today = this._daylightSavingAdjust(new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate())),
+				    // clear time
+				isRTL = this._get(inst, "isRTL"),
+				    showButtonPanel = this._get(inst, "showButtonPanel"),
+				    hideIfNoPrevNext = this._get(inst, "hideIfNoPrevNext"),
+				    navigationAsDateFormat = this._get(inst, "navigationAsDateFormat"),
+				    numMonths = this._getNumberOfMonths(inst),
+				    showCurrentAtPos = this._get(inst, "showCurrentAtPos"),
+				    stepMonths = this._get(inst, "stepMonths"),
+				    isMultiMonth = numMonths[0] !== 1 || numMonths[1] !== 1,
+				    currentDate = this._daylightSavingAdjust(!inst.currentDay ? new Date(9999, 9, 9) : new Date(inst.currentYear, inst.currentMonth, inst.currentDay)),
+				    minDate = this._getMinMaxDate(inst, "min"),
+				    maxDate = this._getMinMaxDate(inst, "max"),
+				    drawMonth = inst.drawMonth - showCurrentAtPos,
+				    drawYear = inst.drawYear;
+
+				if (drawMonth < 0) {
+					drawMonth += 12;
+					drawYear--;
+				}
+				if (maxDate) {
+					maxDraw = this._daylightSavingAdjust(new Date(maxDate.getFullYear(), maxDate.getMonth() - numMonths[0] * numMonths[1] + 1, maxDate.getDate()));
+					maxDraw = minDate && maxDraw < minDate ? minDate : maxDraw;
+					while (this._daylightSavingAdjust(new Date(drawYear, drawMonth, 1)) > maxDraw) {
+						drawMonth--;
+						if (drawMonth < 0) {
+							drawMonth = 11;
+							drawYear--;
+						}
+					}
+				}
+				inst.drawMonth = drawMonth;
+				inst.drawYear = drawYear;
+
+				prevText = this._get(inst, "prevText");
+				prevText = !navigationAsDateFormat ? prevText : this.formatDate(prevText, this._daylightSavingAdjust(new Date(drawYear, drawMonth - stepMonths, 1)), this._getFormatConfig(inst));
+
+				prev = this._canAdjustMonth(inst, -1, drawYear, drawMonth) ? "<a class='ui-datepicker-prev ui-corner-all' data-handler='prev' data-event='click'" + " title='" + prevText + "'><span class='ui-icon ui-icon-circle-triangle-" + (isRTL ? "e" : "w") + "'>" + prevText + "</span></a>" : hideIfNoPrevNext ? "" : "<a class='ui-datepicker-prev ui-corner-all ui-state-disabled' title='" + prevText + "'><span class='ui-icon ui-icon-circle-triangle-" + (isRTL ? "e" : "w") + "'>" + prevText + "</span></a>";
+
+				nextText = this._get(inst, "nextText");
+				nextText = !navigationAsDateFormat ? nextText : this.formatDate(nextText, this._daylightSavingAdjust(new Date(drawYear, drawMonth + stepMonths, 1)), this._getFormatConfig(inst));
+
+				next = this._canAdjustMonth(inst, +1, drawYear, drawMonth) ? "<a class='ui-datepicker-next ui-corner-all' data-handler='next' data-event='click'" + " title='" + nextText + "'><span class='ui-icon ui-icon-circle-triangle-" + (isRTL ? "w" : "e") + "'>" + nextText + "</span></a>" : hideIfNoPrevNext ? "" : "<a class='ui-datepicker-next ui-corner-all ui-state-disabled' title='" + nextText + "'><span class='ui-icon ui-icon-circle-triangle-" + (isRTL ? "w" : "e") + "'>" + nextText + "</span></a>";
+
+				currentText = this._get(inst, "currentText");
+				gotoDate = this._get(inst, "gotoCurrent") && inst.currentDay ? currentDate : today;
+				currentText = !navigationAsDateFormat ? currentText : this.formatDate(currentText, gotoDate, this._getFormatConfig(inst));
+
+				controls = !inst.inline ? "<button type='button' class='ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all' data-handler='hide' data-event='click'>" + this._get(inst, "closeText") + "</button>" : "";
+
+				buttonPanel = showButtonPanel ? "<div class='ui-datepicker-buttonpane ui-widget-content'>" + (isRTL ? controls : "") + (this._isInRange(inst, gotoDate) ? "<button type='button' class='ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all' data-handler='today' data-event='click'" + ">" + currentText + "</button>" : "") + (isRTL ? "" : controls) + "</div>" : "";
+
+				firstDay = parseInt(this._get(inst, "firstDay"), 10);
+				firstDay = isNaN(firstDay) ? 0 : firstDay;
+
+				showWeek = this._get(inst, "showWeek");
+				dayNames = this._get(inst, "dayNames");
+				dayNamesMin = this._get(inst, "dayNamesMin");
+				monthNames = this._get(inst, "monthNames");
+				monthNamesShort = this._get(inst, "monthNamesShort");
+				beforeShowDay = this._get(inst, "beforeShowDay");
+				showOtherMonths = this._get(inst, "showOtherMonths");
+				selectOtherMonths = this._get(inst, "selectOtherMonths");
+				defaultDate = this._getDefaultDate(inst);
+				html = "";
+
+				for (row = 0; row < numMonths[0]; row++) {
+					group = "";
+					this.maxRows = 4;
+					for (col = 0; col < numMonths[1]; col++) {
+						selectedDate = this._daylightSavingAdjust(new Date(drawYear, drawMonth, inst.selectedDay));
+						cornerClass = " ui-corner-all";
+						calender = "";
+						if (isMultiMonth) {
+							calender += "<div class='ui-datepicker-group";
+							if (numMonths[1] > 1) {
+								switch (col) {
+									case 0:
+										calender += " ui-datepicker-group-first";
+										cornerClass = " ui-corner-" + (isRTL ? "right" : "left");break;
+									case numMonths[1] - 1:
+										calender += " ui-datepicker-group-last";
+										cornerClass = " ui-corner-" + (isRTL ? "left" : "right");break;
+									default:
+										calender += " ui-datepicker-group-middle";cornerClass = "";break;
+								}
+							}
+							calender += "'>";
+						}
+						calender += "<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix" + cornerClass + "'>" + (/all|left/.test(cornerClass) && row === 0 ? isRTL ? next : prev : "") + (/all|right/.test(cornerClass) && row === 0 ? isRTL ? prev : next : "") + this._generateMonthYearHeader(inst, drawMonth, drawYear, minDate, maxDate, row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
+						"</div><table class='ui-datepicker-calendar'><thead>" + "<tr>";
+						thead = showWeek ? "<th class='ui-datepicker-week-col'>" + this._get(inst, "weekHeader") + "</th>" : "";
+						for (dow = 0; dow < 7; dow++) {
+							// days of the week
+							day = (dow + firstDay) % 7;
+							thead += "<th scope='col'" + ((dow + firstDay + 6) % 7 >= 5 ? " class='ui-datepicker-week-end'" : "") + ">" + "<span title='" + dayNames[day] + "'>" + dayNamesMin[day] + "</span></th>";
+						}
+						calender += thead + "</tr></thead><tbody>";
+						daysInMonth = this._getDaysInMonth(drawYear, drawMonth);
+						if (drawYear === inst.selectedYear && drawMonth === inst.selectedMonth) {
+							inst.selectedDay = Math.min(inst.selectedDay, daysInMonth);
+						}
+						leadDays = (this._getFirstDayOfMonth(drawYear, drawMonth) - firstDay + 7) % 7;
+						curRows = Math.ceil((leadDays + daysInMonth) / 7); // calculate the number of rows to generate
+						numRows = isMultiMonth ? this.maxRows > curRows ? this.maxRows : curRows : curRows; //If multiple months, use the higher number of rows (see #7043)
+						this.maxRows = numRows;
+						printDate = this._daylightSavingAdjust(new Date(drawYear, drawMonth, 1 - leadDays));
+						for (dRow = 0; dRow < numRows; dRow++) {
+							// create date picker rows
+							calender += "<tr>";
+							tbody = !showWeek ? "" : "<td class='ui-datepicker-week-col'>" + this._get(inst, "calculateWeek")(printDate) + "</td>";
+							for (dow = 0; dow < 7; dow++) {
+								// create date picker days
+								daySettings = beforeShowDay ? beforeShowDay.apply(inst.input ? inst.input[0] : null, [printDate]) : [true, ""];
+								otherMonth = printDate.getMonth() !== drawMonth;
+								unselectable = otherMonth && !selectOtherMonths || !daySettings[0] || minDate && printDate < minDate || maxDate && printDate > maxDate;
+								tbody += "<td class='" + ((dow + firstDay + 6) % 7 >= 5 ? " ui-datepicker-week-end" : "") + ( // highlight weekends
+								otherMonth ? " ui-datepicker-other-month" : "") + ( // highlight days from other months
+								printDate.getTime() === selectedDate.getTime() && drawMonth === inst.selectedMonth && inst._keyEvent || // user pressed key
+								defaultDate.getTime() === printDate.getTime() && defaultDate.getTime() === selectedDate.getTime() ?
+
+								// or defaultDate is current printedDate and defaultDate is selectedDate
+								" " + this._dayOverClass : "") + ( // highlight selected day
+								unselectable ? " " + this._unselectableClass + " ui-state-disabled" : "") + ( // highlight unselectable days
+								otherMonth && !showOtherMonths ? "" : " " + daySettings[1] + ( // highlight custom dates
+								printDate.getTime() === currentDate.getTime() ? " " + this._currentClass : "") + ( // highlight selected day
+								printDate.getTime() === today.getTime() ? " ui-datepicker-today" : "")) + "'" + ( // highlight today (if different)
+								(!otherMonth || showOtherMonths) && daySettings[2] ? " title='" + daySettings[2].replace(/'/g, "&#39;") + "'" : "") + ( // cell title
+								unselectable ? "" : " data-handler='selectDay' data-event='click' data-month='" + printDate.getMonth() + "' data-year='" + printDate.getFullYear() + "'") + ">" + ( // actions
+								otherMonth && !showOtherMonths ? "&#xa0;" : // display for other months
+								unselectable ? "<span class='ui-state-default'>" + printDate.getDate() + "</span>" : "<a class='ui-state-default" + (printDate.getTime() === today.getTime() ? " ui-state-highlight" : "") + (printDate.getTime() === currentDate.getTime() ? " ui-state-active" : "") + ( // highlight selected day
+								otherMonth ? " ui-priority-secondary" : "") + // distinguish dates from other months
+								"' href='#'>" + printDate.getDate() + "</a>") + "</td>"; // display selectable date
+								printDate.setDate(printDate.getDate() + 1);
+								printDate = this._daylightSavingAdjust(printDate);
+							}
+							calender += tbody + "</tr>";
+						}
+						drawMonth++;
+						if (drawMonth > 11) {
+							drawMonth = 0;
+							drawYear++;
+						}
+						calender += "</tbody></table>" + (isMultiMonth ? "</div>" + (numMonths[0] > 0 && col === numMonths[1] - 1 ? "<div class='ui-datepicker-row-break'></div>" : "") : "");
+						group += calender;
+					}
+					html += group;
+				}
+				html += buttonPanel;
+				inst._keyEvent = false;
+				return html;
+			},
+
+			/* Generate the month and year header. */
+			_generateMonthYearHeader: function (inst, drawMonth, drawYear, minDate, maxDate, secondary, monthNames, monthNamesShort) {
+
+				var inMinYear,
+				    inMaxYear,
+				    month,
+				    years,
+				    thisYear,
+				    determineYear,
+				    year,
+				    endYear,
+				    changeMonth = this._get(inst, "changeMonth"),
+				    changeYear = this._get(inst, "changeYear"),
+				    showMonthAfterYear = this._get(inst, "showMonthAfterYear"),
+				    html = "<div class='ui-datepicker-title'>",
+				    monthHtml = "";
+
+				// Month selection
+				if (secondary || !changeMonth) {
+					monthHtml += "<span class='ui-datepicker-month'>" + monthNames[drawMonth] + "</span>";
+				} else {
+					inMinYear = minDate && minDate.getFullYear() === drawYear;
+					inMaxYear = maxDate && maxDate.getFullYear() === drawYear;
+					monthHtml += "<select class='ui-datepicker-month' data-handler='selectMonth' data-event='change'>";
+					for (month = 0; month < 12; month++) {
+						if ((!inMinYear || month >= minDate.getMonth()) && (!inMaxYear || month <= maxDate.getMonth())) {
+							monthHtml += "<option value='" + month + "'" + (month === drawMonth ? " selected='selected'" : "") + ">" + monthNamesShort[month] + "</option>";
+						}
+					}
+					monthHtml += "</select>";
+				}
+
+				if (!showMonthAfterYear) {
+					html += monthHtml + (secondary || !(changeMonth && changeYear) ? "&#xa0;" : "");
+				}
+
+				// Year selection
+				if (!inst.yearshtml) {
+					inst.yearshtml = "";
+					if (secondary || !changeYear) {
+						html += "<span class='ui-datepicker-year'>" + drawYear + "</span>";
+					} else {
+
+						// determine range of years to display
+						years = this._get(inst, "yearRange").split(":");
+						thisYear = new Date().getFullYear();
+						determineYear = function (value) {
+							var year = value.match(/c[+\-].*/) ? drawYear + parseInt(value.substring(1), 10) : value.match(/[+\-].*/) ? thisYear + parseInt(value, 10) : parseInt(value, 10);
+							return isNaN(year) ? thisYear : year;
+						};
+						year = determineYear(years[0]);
+						endYear = Math.max(year, determineYear(years[1] || ""));
+						year = minDate ? Math.max(year, minDate.getFullYear()) : year;
+						endYear = maxDate ? Math.min(endYear, maxDate.getFullYear()) : endYear;
+						inst.yearshtml += "<select class='ui-datepicker-year' data-handler='selectYear' data-event='change'>";
+						for (; year <= endYear; year++) {
+							inst.yearshtml += "<option value='" + year + "'" + (year === drawYear ? " selected='selected'" : "") + ">" + year + "</option>";
+						}
+						inst.yearshtml += "</select>";
+
+						html += inst.yearshtml;
+						inst.yearshtml = null;
+					}
+				}
+
+				html += this._get(inst, "yearSuffix");
+				if (showMonthAfterYear) {
+					html += (secondary || !(changeMonth && changeYear) ? "&#xa0;" : "") + monthHtml;
+				}
+				html += "</div>"; // Close datepicker_header
+				return html;
+			},
+
+			/* Adjust one of the date sub-fields. */
+			_adjustInstDate: function (inst, offset, period) {
+				var year = inst.selectedYear + (period === "Y" ? offset : 0),
+				    month = inst.selectedMonth + (period === "M" ? offset : 0),
+				    day = Math.min(inst.selectedDay, this._getDaysInMonth(year, month)) + (period === "D" ? offset : 0),
+				    date = this._restrictMinMax(inst, this._daylightSavingAdjust(new Date(year, month, day)));
+
+				inst.selectedDay = date.getDate();
+				inst.drawMonth = inst.selectedMonth = date.getMonth();
+				inst.drawYear = inst.selectedYear = date.getFullYear();
+				if (period === "M" || period === "Y") {
+					this._notifyChange(inst);
+				}
+			},
+
+			/* Ensure a date is within any min/max bounds. */
+			_restrictMinMax: function (inst, date) {
+				var minDate = this._getMinMaxDate(inst, "min"),
+				    maxDate = this._getMinMaxDate(inst, "max"),
+				    newDate = minDate && date < minDate ? minDate : date;
+				return maxDate && newDate > maxDate ? maxDate : newDate;
+			},
+
+			/* Notify change of month/year. */
+			_notifyChange: function (inst) {
+				var onChange = this._get(inst, "onChangeMonthYear");
+				if (onChange) {
+					onChange.apply(inst.input ? inst.input[0] : null, [inst.selectedYear, inst.selectedMonth + 1, inst]);
+				}
+			},
+
+			/* Determine the number of months to show. */
+			_getNumberOfMonths: function (inst) {
+				var numMonths = this._get(inst, "numberOfMonths");
+				return numMonths == null ? [1, 1] : typeof numMonths === "number" ? [1, numMonths] : numMonths;
+			},
+
+			/* Determine the current maximum date - ensure no time components are set. */
+			_getMinMaxDate: function (inst, minMax) {
+				return this._determineDate(inst, this._get(inst, minMax + "Date"), null);
+			},
+
+			/* Find the number of days in a given month. */
+			_getDaysInMonth: function (year, month) {
+				return 32 - this._daylightSavingAdjust(new Date(year, month, 32)).getDate();
+			},
+
+			/* Find the day of the week of the first of a month. */
+			_getFirstDayOfMonth: function (year, month) {
+				return new Date(year, month, 1).getDay();
+			},
+
+			/* Determines if we should allow a "next/prev" month display change. */
+			_canAdjustMonth: function (inst, offset, curYear, curMonth) {
+				var numMonths = this._getNumberOfMonths(inst),
+				    date = this._daylightSavingAdjust(new Date(curYear, curMonth + (offset < 0 ? offset : numMonths[0] * numMonths[1]), 1));
+
+				if (offset < 0) {
+					date.setDate(this._getDaysInMonth(date.getFullYear(), date.getMonth()));
+				}
+				return this._isInRange(inst, date);
+			},
+
+			/* Is the given date in the accepted range? */
+			_isInRange: function (inst, date) {
+				var yearSplit,
+				    currentYear,
+				    minDate = this._getMinMaxDate(inst, "min"),
+				    maxDate = this._getMinMaxDate(inst, "max"),
+				    minYear = null,
+				    maxYear = null,
+				    years = this._get(inst, "yearRange");
+				if (years) {
+					yearSplit = years.split(":");
+					currentYear = new Date().getFullYear();
+					minYear = parseInt(yearSplit[0], 10);
+					maxYear = parseInt(yearSplit[1], 10);
+					if (yearSplit[0].match(/[+\-].*/)) {
+						minYear += currentYear;
+					}
+					if (yearSplit[1].match(/[+\-].*/)) {
+						maxYear += currentYear;
+					}
+				}
+
+				return (!minDate || date.getTime() >= minDate.getTime()) && (!maxDate || date.getTime() <= maxDate.getTime()) && (!minYear || date.getFullYear() >= minYear) && (!maxYear || date.getFullYear() <= maxYear);
+			},
+
+			/* Provide the configuration settings for formatting/parsing. */
+			_getFormatConfig: function (inst) {
+				var shortYearCutoff = this._get(inst, "shortYearCutoff");
+				shortYearCutoff = typeof shortYearCutoff !== "string" ? shortYearCutoff : new Date().getFullYear() % 100 + parseInt(shortYearCutoff, 10);
+				return { shortYearCutoff: shortYearCutoff,
+					dayNamesShort: this._get(inst, "dayNamesShort"), dayNames: this._get(inst, "dayNames"),
+					monthNamesShort: this._get(inst, "monthNamesShort"), monthNames: this._get(inst, "monthNames") };
+			},
+
+			/* Format the given date for display. */
+			_formatDate: function (inst, day, month, year) {
+				if (!day) {
+					inst.currentDay = inst.selectedDay;
+					inst.currentMonth = inst.selectedMonth;
+					inst.currentYear = inst.selectedYear;
+				}
+				var date = day ? typeof day === "object" ? day : this._daylightSavingAdjust(new Date(year, month, day)) : this._daylightSavingAdjust(new Date(inst.currentYear, inst.currentMonth, inst.currentDay));
+				return this.formatDate(this._get(inst, "dateFormat"), date, this._getFormatConfig(inst));
+			}
+		});
+
+		/*
+   * Bind hover events for datepicker elements.
+   * Done via delegate so the binding only occurs once in the lifetime of the parent div.
+   * Global datepicker_instActive, set by _updateDatepicker allows the handlers to find their way back to the active picker.
+   */
+		function datepicker_bindHover(dpDiv) {
+			var selector = "button, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-calendar td a";
+			return dpDiv.on("mouseout", selector, function () {
+				$(this).removeClass("ui-state-hover");
+				if (this.className.indexOf("ui-datepicker-prev") !== -1) {
+					$(this).removeClass("ui-datepicker-prev-hover");
+				}
+				if (this.className.indexOf("ui-datepicker-next") !== -1) {
+					$(this).removeClass("ui-datepicker-next-hover");
+				}
+			}).on("mouseover", selector, datepicker_handleMouseover);
+		}
+
+		function datepicker_handleMouseover() {
+			if (!$.datepicker._isDisabledDatepicker(datepicker_instActive.inline ? datepicker_instActive.dpDiv.parent()[0] : datepicker_instActive.input[0])) {
+				$(this).parents(".ui-datepicker-calendar").find("a").removeClass("ui-state-hover");
+				$(this).addClass("ui-state-hover");
+				if (this.className.indexOf("ui-datepicker-prev") !== -1) {
+					$(this).addClass("ui-datepicker-prev-hover");
+				}
+				if (this.className.indexOf("ui-datepicker-next") !== -1) {
+					$(this).addClass("ui-datepicker-next-hover");
+				}
+			}
+		}
+
+		/* jQuery extend now ignores nulls! */
+		function datepicker_extendRemove(target, props) {
+			$.extend(target, props);
+			for (var name in props) {
+				if (props[name] == null) {
+					target[name] = props[name];
+				}
+			}
+			return target;
+		}
+
+		/* Invoke the datepicker functionality.
+     @param  options  string - a command, optionally followed by additional parameters or
+  					Object - settings for attaching new datepicker functionality
+     @return  jQuery object */
+		$.fn.datepicker = function (options) {
+
+			/* Verify an empty collection wasn't passed - Fixes #6976 */
+			if (!this.length) {
+				return this;
+			}
+
+			/* Initialise the date picker. */
+			if (!$.datepicker.initialized) {
+				$(document).on("mousedown", $.datepicker._checkExternalClick);
+				$.datepicker.initialized = true;
+			}
+
+			/* Append datepicker main container to body if not exist. */
+			if ($("#" + $.datepicker._mainDivId).length === 0) {
+				$("body").append($.datepicker.dpDiv);
+			}
+
+			var otherArgs = Array.prototype.slice.call(arguments, 1);
+			if (typeof options === "string" && (options === "isDisabled" || options === "getDate" || options === "widget")) {
+				return $.datepicker["_" + options + "Datepicker"].apply($.datepicker, [this[0]].concat(otherArgs));
+			}
+			if (options === "option" && arguments.length === 2 && typeof arguments[1] === "string") {
+				return $.datepicker["_" + options + "Datepicker"].apply($.datepicker, [this[0]].concat(otherArgs));
+			}
+			return this.each(function () {
+				typeof options === "string" ? $.datepicker["_" + options + "Datepicker"].apply($.datepicker, [this].concat(otherArgs)) : $.datepicker._attachDatepicker(this, options);
+			});
+		};
+
+		$.datepicker = new Datepicker(); // singleton instance
+		$.datepicker.initialized = false;
+		$.datepicker.uuid = new Date().getTime();
+		$.datepicker.version = "1.12.1";
+
+		return $.datepicker;
+	};
+
+	; /*!
+    * jQuery UI Datepicker 1.12.1
+    * http://jqueryui.com
+    *
+    * Copyright jQuery Foundation and other contributors
+    * Released under the MIT license.
+    * http://jquery.org/license
+    */
+
+	module.exports = exports["default"];
+});
 // jQuery or jQuery-like library, such as Zepto
 
 
